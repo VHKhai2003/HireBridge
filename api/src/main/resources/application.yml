@@ -1,0 +1,18 @@
+server:
+    port: ${SERVER_PORT:8080}
+spring:
+    application:
+        name: recruitment
+    output:
+        ansi:
+            enabled: ALWAYS
+    datasource:
+        url: jdbc:postgresql://localhost:5432/recruitment
+        driver-class-name: org.postgresql.Driver
+        username: ${SPRING_DATASOURCE_USERNAME:postgres}
+        password: ${SPRING_DATASOURCE_PASSWORD:khai1234}
+    jpa:
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
