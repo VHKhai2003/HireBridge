@@ -28,6 +28,8 @@ public class SecurityConfig {
                 .formLogin(login -> login.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(publicUrls).permitAll()
+                        .requestMatchers("/candidate/**").hasRole("CANDIDATE")
+                        .requestMatchers("/company/**").hasRole("COMPANY")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

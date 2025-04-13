@@ -3,9 +3,9 @@ package com.vhkhai.security.encoder;
 import com.vhkhai.provider.PasswordEncoderProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class PasswordEncoderUtils implements PasswordEncoderProvider {
     private final PasswordEncoder passwordEncoder;
