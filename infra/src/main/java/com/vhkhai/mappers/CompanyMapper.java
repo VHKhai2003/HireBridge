@@ -54,8 +54,8 @@ public class CompanyMapper {
                 .name(company.getName())
                 .email(company.getEmail())
                 .phone(company.getPhone())
-                .latitude(company.getLocation().latitude())
-                .longitude(company.getLocation().longitude())
+                .latitude(company.getLocation() != null ? company.getLocation().latitude() : null)
+                .longitude(company.getLocation() != null ? company.getLocation().longitude() : null)
                 .account(accountEntity)
                 .jobPostings(jobPostingEntities)
                 .build();

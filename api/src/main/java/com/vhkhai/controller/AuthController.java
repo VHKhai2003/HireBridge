@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -26,4 +28,14 @@ public class AuthController {
                     .withMessage("Account created successfully")
                     .buildHttpResponseEntity();
      }
+
+     @PostMapping("/login")
+     public ResponseEntity login(@RequestBody AccountRequestDto accountRequestDto) {
+          return new RestResponse<>()
+                  .withData(Map.of("token", accountService.login(accountRequestDto)))
+                  .withStatus(200)
+                  .withMessage("Login successfully")
+                  .buildHttpResponseEntity();
+     }
+
 }

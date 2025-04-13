@@ -4,11 +4,9 @@ import com.vhkhai.aggrerates.account.Account;
 import com.vhkhai.aggrerates.candidate.Candidate;
 import com.vhkhai.aggrerates.candidate.CandidateFollowing;
 import com.vhkhai.aggrerates.company.Company;
-import com.vhkhai.enumerations.AccountType;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.List;
 
 @Service
 public class AccountCreatingService {

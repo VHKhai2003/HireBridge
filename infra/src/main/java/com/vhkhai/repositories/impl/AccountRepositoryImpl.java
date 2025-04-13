@@ -36,6 +36,13 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Optional<Account> getById(UUID uuid) {
-        return Optional.empty();
+        return accountRepositoryJpa.findById(uuid)
+                .map(accountMapper::toAccount);
+    }
+
+    @Override
+    public Optional<Account> getByEmail(String email) {
+        return accountRepositoryJpa.findByEmail(email)
+                .map(accountMapper::toAccount);
     }
 }
