@@ -16,6 +16,13 @@ public class Account {
     private String password;
     private AccountType type;
 
+    public Account(String email, String password, AccountType type) {
+        this.id = UUID.randomUUID();
+        this.email = email;
+        this.password = password;
+        this.type = type;
+    }
+
     public boolean login(String email, String hashedPassword) {
         return this.email.equals(email) && this.password.equals(hashedPassword);
     }

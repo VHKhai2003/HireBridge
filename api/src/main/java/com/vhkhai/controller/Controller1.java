@@ -1,6 +1,6 @@
 package com.vhkhai.controller;
 
-import com.vhkhai.repositories.AccountRepository;
+import com.vhkhai.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class Controller1 {
 
-    private final AccountRepository accountRepository;
+    private final AccountService accountService;
+
     @GetMapping("/hello")
     public Object hello() {
-        return accountRepository.findAll();
+        return "Hello world";
     }
 }

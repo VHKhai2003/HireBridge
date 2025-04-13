@@ -2,7 +2,7 @@ package com.vhkhai.shared;
 
 import java.util.Optional;
 
-public interface BaseBehavior <T, ID> {
+public interface BaseRepository<T, ID> {
     T create(T entity);
 
     T update(T entity);
