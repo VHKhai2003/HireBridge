@@ -1,6 +1,6 @@
-package com.vhkhai.entities.candidate;
+package com.vhkhai.aggrerates.candidate;
 
-import com.vhkhai.entities.company.CompanyEntity;
+import com.vhkhai.aggrerates.company.Company;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,21 +11,21 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class CandidateFollowingEntity {
+public class Following {
     @EmbeddedId
 //    @AttributeOverrides({
 //            @AttributeOverride(name = "candidateId", column = @Column(name = "candidate_id")),
 //            @AttributeOverride(name = "companyId", column = @Column(name = "company_id"))
 //    })
-    private CandidateFollowingId id;
+    private FollowingId id;
 
     @ManyToOne
     @MapsId("candidateId")
     @JoinColumn(name = "candidate_id")
-    private CandidateEntity candidate;
+    private Candidate candidate;
 
     @ManyToOne
     @MapsId("companyId")
     @JoinColumn(name = "company_id")
-    private CompanyEntity company;
+    private Company company;
 }

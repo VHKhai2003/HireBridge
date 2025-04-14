@@ -1,6 +1,6 @@
-package com.vhkhai.entities.recruitment;
+package com.vhkhai.aggrerates.job_application;
 
-import com.vhkhai.entities.company.JobPostingEntity;
+import com.vhkhai.aggrerates.company.JobPosting;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,15 +14,15 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class RecruitmentEntity {
+public class Recruitment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @OneToOne
     @JoinColumn(name = "job_posting_id")
-    private JobPostingEntity jobPosting;
+    private JobPosting jobPosting;
 
     @OneToMany(mappedBy = "recruitment")
-    private List<JobApplicationEntity> applications;
+    private List<JobApplication> applications;
 }

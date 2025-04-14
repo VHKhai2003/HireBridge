@@ -1,8 +1,6 @@
 package com.vhkhai.repositories.impl;
 
 import com.vhkhai.aggrerates.account.Account;
-import com.vhkhai.entities.account.AccountEntity;
-import com.vhkhai.mappers.AccountMapper;
 import com.vhkhai.repositories.AccountRepository;
 import com.vhkhai.repositories.jpa.AccountRepositoryJpa;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +13,10 @@ import java.util.UUID;
 @Repository
 public class AccountRepositoryImpl implements AccountRepository {
     private final AccountRepositoryJpa accountRepositoryJpa;
-    private final AccountMapper accountMapper;
 
     @Override
     public Account create(Account account) {
-        AccountEntity accountEntity = accountMapper.toAccountEntity(account);
-        AccountEntity savedEntity = accountRepositoryJpa.save(accountEntity);
-        return accountMapper.toAccount(savedEntity);
+        return accountRepositoryJpa.save(account);
     }
 
     @Override
@@ -35,14 +30,12 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public Optional<Account> getById(UUID uuid) {
-        return accountRepositoryJpa.findById(uuid)
-                .map(accountMapper::toAccount);
+    public Optional<Account> getById(UUID id) {
+        return accountRepositoryJpa.findById(id);
     }
 
     @Override
     public Optional<Account> getByEmail(String email) {
-        return accountRepositoryJpa.findByEmail(email)
-                .map(accountMapper::toAccount);
+        return accountRepositoryJpa.findByEmail(email);
     }
 }

@@ -1,7 +1,11 @@
 package com.vhkhai.exception;
 
-public class AuthException extends RuntimeException {
-    public AuthException(String message) {
-        super(message);
+import lombok.Getter;
+
+@Getter
+public class AuthException extends BaseException {
+
+    public AuthException(ErrorCode errorCode) {
+        super(errorCode);
     }
 }

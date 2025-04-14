@@ -1,4 +1,4 @@
-package com.vhkhai.entities.candidate;
+package com.vhkhai.aggrerates.candidate;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;
@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CandidateFollowingId {
+public class FollowingId {
     private UUID candidateId;
     private UUID companyId;
 }

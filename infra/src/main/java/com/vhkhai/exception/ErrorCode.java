@@ -3,6 +3,7 @@ package com.vhkhai.exception;
 public enum ErrorCode {
     INVALID_REQUEST(400, "Invalid request"),
     INVALID_PARAMETER(400, "Invalid parameter"),
+    INCORRECT_USERNAME_OR_PASSWORD(400, "Incorrect username or password"),
     INVALID_TOKEN(401, "Invalid token"),
     UNAUTHORIZED(401, "Unauthorized"),
     FORBIDDEN(403, "Forbidden"),

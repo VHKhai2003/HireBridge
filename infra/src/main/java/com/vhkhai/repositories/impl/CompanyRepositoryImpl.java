@@ -1,8 +1,6 @@
 package com.vhkhai.repositories.impl;
 
 import com.vhkhai.aggrerates.company.Company;
-import com.vhkhai.entities.company.CompanyEntity;
-import com.vhkhai.mappers.CompanyMapper;
 import com.vhkhai.repositories.CompanyRepository;
 import com.vhkhai.repositories.jpa.CompanyRepositoryJpa;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +14,10 @@ import java.util.UUID;
 public class CompanyRepositoryImpl implements CompanyRepository {
 
     private final CompanyRepositoryJpa companyRepositoryJpa;
-    private final CompanyMapper mapper;
 
     @Override
     public Company create(Company company) {
-        CompanyEntity entity = mapper.toCompanyEntity(company);
-        CompanyEntity savedEntity = companyRepositoryJpa.save(entity);
-        return mapper.toCompany(savedEntity);
+        return companyRepositoryJpa.save(company);
     }
 
     @Override

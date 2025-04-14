@@ -1,7 +1,6 @@
-package com.vhkhai.entities.recruitment;
+package com.vhkhai.aggrerates.job_application;
 
-
-import com.vhkhai.entities.candidate.CandidateEntity;
+import com.vhkhai.aggrerates.candidate.Candidate;
 import com.vhkhai.enumerations.ApplicationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class JobApplicationEntity {
+public class JobApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -27,9 +26,9 @@ public class JobApplicationEntity {
 
     @ManyToOne
     @JoinColumn(name = "candidate_id")
-    private CandidateEntity candidate;
+    private Candidate candidate;
 
     @ManyToOne
     @JoinColumn(name = "job_posting_id")
-    private RecruitmentEntity recruitment;
+    private Recruitment recruitment;
 }

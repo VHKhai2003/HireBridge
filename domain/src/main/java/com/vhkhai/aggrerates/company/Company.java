@@ -1,17 +1,23 @@
 package com.vhkhai.aggrerates.company;
 
+import com.vhkhai.aggrerates.account.Account;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "companies")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-@ToString
+@EqualsAndHashCode(of = {"id"})
 public class Company {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String name;
@@ -20,19 +26,13 @@ public class Company {
 
     private String phone;
 
-    private Location location;
+    private String address;
 
-    private UUID accountId;
 
+    @OneToOne
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    private Account account;
+
+    @OneToMany(mappedBy = "company")
     private List<JobPosting> jobPostings;
-
-    public void addJobPosting(String title, String requirement) {
-        JobPosting jobPosting = JobPosting.builder()
-                .id(UUID.randomUUID())
-                .title(title)
-                .requirement(requirement)
-                .companyId(this.id)
-                .build();
-        this.jobPostings.add(jobPosting);
-    }
 }
