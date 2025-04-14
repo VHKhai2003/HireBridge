@@ -12,7 +12,7 @@ public class DomainException extends RuntimeException {
         super(message);
         this.statusCode = -1;
     }
-    public DomainException(ErrorCode errorCode) {
+    public DomainException(DomainErrorCode errorCode) {
         super(errorCode.getDesc());
         this.statusCode = errorCode.getCode();
     }

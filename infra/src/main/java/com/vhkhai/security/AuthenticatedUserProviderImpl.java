@@ -24,7 +24,7 @@ public class AuthenticatedUserProviderImpl implements AuthenticatedUserProvider 
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
-        
+
         return (Account) authentication.getPrincipal();
     }
 }
