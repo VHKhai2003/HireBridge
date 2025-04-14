@@ -1,6 +1,6 @@
 package com.vhkhai.controller;
 
-import com.vhkhai.provider.AuthenticatedUserProvider;
+import com.vhkhai.port.UserAuthentication;
 import com.vhkhai.utils.RestResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/company")
 public class CompanyController {
-    private final AuthenticatedUserProvider authenticatedUserProvider;
+    private final UserAuthentication authenticatedUserProvider;
 
     @GetMapping("/me")
     public ResponseEntity getMe() {

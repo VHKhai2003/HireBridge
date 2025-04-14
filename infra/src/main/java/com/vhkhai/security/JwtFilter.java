@@ -2,6 +2,7 @@ package com.vhkhai.security;
 
 import com.vhkhai.aggrerates.account.Account;
 import com.vhkhai.security.jwt.JwtUtils;
+import com.vhkhai.service.AccountService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
+    private final AccountService accountService;
 
 
     @Override
@@ -34,9 +37,9 @@ public class JwtFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
             if (jwtUtils.validateToken(token)) {
-                Account account = jwtUtils.getAccountFromToken(token);
-                // log.info("Account: {}", account);
-                if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                UUID accountId = jwtUtils.getAccountIdFromToken(token);
+                Account account = accountService.getAccountById(accountId);
+                if (account != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     List<GrantedAuthority> authorities = List.of(
                             new SimpleGrantedAuthority("ROLE_" + account.getType().name()));
 

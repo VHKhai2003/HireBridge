@@ -1,13 +1,13 @@
 package com.vhkhai.security.encoder;
 
-import com.vhkhai.provider.PasswordEncoderProvider;
+import com.vhkhai.port.PwEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class PasswordEncoderUtils implements PasswordEncoderProvider {
+public class PasswordEncoderProvider implements PwEncoder {
     private final PasswordEncoder passwordEncoder;
 
     @Override

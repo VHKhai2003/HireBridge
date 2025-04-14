@@ -1,6 +1,6 @@
-package com.vhkhai.provider;
+package com.vhkhai.port;
 
-public interface PasswordEncoderProvider {
+public interface PwEncoder {
     String encode(String rawPassword);
     boolean matches(String rawPassword, String encodedPassword);
 }

@@ -1,7 +1,7 @@
-package com.vhkhai.provider;
+package com.vhkhai.port;
 
 import com.vhkhai.aggrerates.account.Account;
 
-public interface AuthenticatedUserProvider {
+public interface UserAuthentication {
     Account getAuthenticatedUser();
 }
