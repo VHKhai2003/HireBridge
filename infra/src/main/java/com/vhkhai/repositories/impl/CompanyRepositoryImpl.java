@@ -22,16 +22,21 @@ public class CompanyRepositoryImpl implements CompanyRepository {
 
     @Override
     public Company update(Company company) {
-        return null;
+        return companyRepositoryJpa.save(company);
     }
 
     @Override
     public void delete(UUID uuid) {
-
+        companyRepositoryJpa.deleteById(uuid);
     }
 
     @Override
     public Optional<Company> getById(UUID uuid) {
-        return Optional.empty();
+        return companyRepositoryJpa.findById(uuid);
+    }
+
+    @Override
+    public Optional<Company> findByAccountId(UUID accountId) {
+        return companyRepositoryJpa.findByAccountId(accountId);
     }
 }

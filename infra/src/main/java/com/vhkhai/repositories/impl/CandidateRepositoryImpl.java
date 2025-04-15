@@ -1,5 +1,6 @@
 package com.vhkhai.repositories.impl;
 
+import com.vhkhai.aggrerates.account.Account;
 import com.vhkhai.aggrerates.candidate.Candidate;
 import com.vhkhai.repositories.CandidateRepository;
 import com.vhkhai.repositories.jpa.CandidateRepositoryJpa;
@@ -21,17 +22,22 @@ public class CandidateRepositoryImpl implements CandidateRepository {
     }
 
     @Override
-    public Candidate update(Candidate entity) {
-        return null;
+    public Candidate update(Candidate candidate) {
+        return candidateRepositoryJpa.save(candidate);
     }
 
     @Override
     public void delete(UUID uuid) {
-
+        candidateRepositoryJpa.deleteById(uuid);
     }
 
     @Override
     public Optional<Candidate> getById(UUID uuid) {
-        return Optional.empty();
+        return candidateRepositoryJpa.findById(uuid);
+    }
+
+    @Override
+    public Optional<Candidate> findByAccountId(UUID accountId) {
+        return candidateRepositoryJpa.findByAccountId(accountId);
     }
 }

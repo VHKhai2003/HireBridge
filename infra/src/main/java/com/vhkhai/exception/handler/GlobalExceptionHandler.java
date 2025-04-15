@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.Date;
 
@@ -22,6 +23,8 @@ import java.util.Date;
 @RequiredArgsConstructor
 @Slf4j
 public class GlobalExceptionHandler {
+
+    //HttpRequestMethodNotSupportedException 
 
     // for @RequestBody
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -69,6 +72,29 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.builder()
                         .status(400)
                         .message("Invalid value for parameter")
+                        .timestamp(new Date())
+                        .build());
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException exception, WebRequest request) {
+        log.error("MethodArgumentTypeMismatchException handler: {}", exception.getMessage());
+        logRequestUrl(request);
+
+        String paramName = exception.getName();
+        String expectedType = exception.getRequiredType() != null ? exception.getRequiredType().getSimpleName() : "unknown";
+        String actualValue = String.valueOf(exception.getValue());
+
+        String message = String.format(
+                "Parameter '%s' has value '%s' can not convert to %s.",
+                paramName, actualValue, expectedType
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.builder()
+                        .status(400)
+                        .message(message)
                         .timestamp(new Date())
                         .build());
     }
