@@ -24,7 +24,7 @@ import java.util.Date;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    //HttpRequestMethodNotSupportedException 
+    //HttpRequestMethodNotSupportedException
 
     // for @RequestBody
     @ExceptionHandler(HttpMessageNotReadableException.class)

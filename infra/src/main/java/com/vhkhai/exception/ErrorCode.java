@@ -15,7 +15,12 @@ public enum ErrorCode {
     FORBIDDEN(403001, "Forbidden", 403),
     NOT_FOUND(404001, "Not found", 404),
     CONFLICT(409001, "Conflict", 409),
-    INTERNAL_SERVER_ERROR(500001, "Internal server error", 500);
+    INTERNAL_SERVER_ERROR(500001, "Internal server error", 500),
+
+
+    FAILED_TO_UPLOAD_FILE(500002, "Failed to upload file", 500),
+    FAILED_TO_DELETE_FILE(500003, "Failed to delete file", 500);
+
 
     private final int code;
     private final String desc;

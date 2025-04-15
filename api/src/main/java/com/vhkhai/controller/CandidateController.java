@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class CandidateController {
                 .buildHttpResponseEntity();
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity updateCandidate(@PathVariable UUID id,
                                           @Valid @RequestBody CandidateUpdateProfileRequestDto requestDto) {
 
@@ -39,6 +40,17 @@ public class CandidateController {
                 .withData(candidateService.updateProfile(id, requestDto))
                 .withStatus(200)
                 .withMessage("Update candidate successfully")
+                .buildHttpResponseEntity();
+    }
+
+    @PostMapping("/{id}/upload-cv")
+    public ResponseEntity uploadCV(@PathVariable UUID id,
+                                    @RequestParam("file") MultipartFile file) {
+
+        return new RestResponse<>()
+                .withData(candidateService.uploadCV(id, file))
+                .withStatus(200)
+                .withMessage("Upload CV successfully")
                 .buildHttpResponseEntity();
     }
 }
