@@ -1,20 +1,18 @@
 package com.vhkhai.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
+@Getter
+@AllArgsConstructor
+@ToString
 public enum ApplicationErrorCode {
-    INCORRECT_USERNAME_OR_PASSWORD(400, "Incorrect username or password");
+    INCORRECT_EMAIL_OR_PASSWORD(400001, "Incorrect email or password", 400),
+    ACCOUNT_NOT_FOUND(400002, "Account not found", 400),
+    FAILED_TO_CREATE_ACCOUNT(400003, "Failed to create account", 400);
+
     private final int code;
     private final String desc;
-
-    ApplicationErrorCode(int code, String desc) {
-        this.code = code;
-        this.desc = desc;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
+    private final int statusCode;
 }

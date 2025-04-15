@@ -1,14 +1,9 @@
 package com.vhkhai.exception;
 
 public enum DomainErrorCode {
-    INVALID_REQUEST(400, "Invalid request"),
-    INVALID_PARAMETER(400, "Invalid parameter"),
-    INVALID_TOKEN(401, "Invalid token"),
-    UNAUTHORIZED(401, "Unauthorized"),
-    FORBIDDEN(403, "Forbidden"),
-    NOT_FOUND(404, "Not found"),
-    CONFLICT(409, "Conflict"),
-    INTERNAL_SERVER_ERROR(500, "Internal server error");
+
+    EMAIL_ALREADY_EXISTS(1001, "Email already exists"),
+    ACCOUNT_TYPE_NOT_FOUND(1002, "Account type not found");
 
     private final int code;
     private final String desc;

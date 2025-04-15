@@ -19,7 +19,11 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            AccessDeniedHandler accessDeniedHandler,
+            AuthenticationEntryPoint authenticationEntryPoint) throws Exception {
+
         return http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -30,6 +34,9 @@ public class SecurityConfig {
                         .requestMatchers("/company/**").hasRole("COMPANY")
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(exHandler -> exHandler
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

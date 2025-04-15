@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface AccountRepository extends BaseRepository<Account, UUID> {
     Optional<Account> getByEmail(String email);
+    boolean existsByEmail(String email);
 }

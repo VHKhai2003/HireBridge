@@ -16,4 +16,8 @@ public class DomainException extends RuntimeException {
         super(errorCode.getDesc());
         this.statusCode = errorCode.getCode();
     }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
 }

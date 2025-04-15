@@ -1,29 +1,24 @@
 package com.vhkhai.exception;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+
+@RequiredArgsConstructor
+@Getter
+@ToString
 public enum ErrorCode {
-    INVALID_REQUEST(400, "Invalid request"),
-    INVALID_PARAMETER(400, "Invalid parameter"),
-    INCORRECT_USERNAME_OR_PASSWORD(400, "Incorrect username or password"),
-    INVALID_TOKEN(401, "Invalid token"),
-    UNAUTHORIZED(401, "Unauthorized"),
-    FORBIDDEN(403, "Forbidden"),
-    NOT_FOUND(404, "Not found"),
-    CONFLICT(409, "Conflict"),
-    INTERNAL_SERVER_ERROR(500, "Internal server error");
+    INVALID_REQUEST(400001, "Invalid request", 400),
+    INVALID_PARAMETER(400002, "Invalid parameter", 400),
+    INVALID_TOKEN(401001, "Invalid token", 401),
+    UNAUTHORIZED(401002, "Unauthorized", 401),
+    FORBIDDEN(403001, "Forbidden", 403),
+    NOT_FOUND(404001, "Not found", 404),
+    CONFLICT(409001, "Conflict", 409),
+    INTERNAL_SERVER_ERROR(500001, "Internal server error", 500);
 
     private final int code;
     private final String desc;
+    private final int statusCode;
 
-    ErrorCode(int code, String desc) {
-        this.code = code;
-        this.desc = desc;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
 }

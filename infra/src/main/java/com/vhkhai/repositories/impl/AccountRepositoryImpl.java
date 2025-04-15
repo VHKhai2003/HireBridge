@@ -38,4 +38,9 @@ public class AccountRepositoryImpl implements AccountRepository {
     public Optional<Account> getByEmail(String email) {
         return accountRepositoryJpa.findByEmail(email);
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return accountRepositoryJpa.existsByEmail(email);
+    }
 }

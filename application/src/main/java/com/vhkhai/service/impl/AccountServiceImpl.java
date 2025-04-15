@@ -4,6 +4,8 @@ import com.vhkhai.aggrerates.account.Account;
 import com.vhkhai.dto.account.AccountRequestDto;
 import com.vhkhai.dto.account.AccountResponseDto;
 import com.vhkhai.dto.token.TokenResponseDto;
+import com.vhkhai.exception.ApplicationErrorCode;
+import com.vhkhai.exception.ApplicationException;
 import com.vhkhai.mapper.AccountDtoMapper;
 import com.vhkhai.port.Jwt;
 import com.vhkhai.port.PwEncoder;
@@ -24,8 +26,6 @@ import java.util.UUID;
 public class AccountServiceImpl implements AccountService {
     private final ApplicationEventPublisher applicationEventPublisher;
     private final AccountRepository accountRepository;
-    private final CandidateRepository candidateRepository;
-    private final CompanyRepository companyRepository;
     private final AccountCreationService accountCreationService;
     private final AccountDtoMapper mapper;
     private final Jwt jwtProvider;
@@ -33,21 +33,11 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
-    @Transactional
     public AccountResponseDto create(AccountRequestDto accountRequestDto) {
-        // check if email already exists
-        Account account = mapper.toAccount(accountRequestDto);
-        account.setPassword(passwordEncoder.encode(account.getPassword()));
-        Account savedAccount = accountRepository.create(account);
-
-        switch (savedAccount.getType()) {
-            case CANDIDATE -> {
-                candidateRepository.create(accountCreationService.createCandidate(savedAccount));
-            }
-            case COMPANY -> {
-                companyRepository.create(accountCreationService.createCompany(savedAccount));
-            }
-            default -> throw new IllegalArgumentException("Invalid account type: " + savedAccount.getType());
+        String hashedPassword = passwordEncoder.encode(accountRequestDto.getPassword());
+        Account savedAccount = accountCreationService.createAccount(accountRequestDto.getEmail(), hashedPassword,accountRequestDto.getType());
+        if (savedAccount == null) {
+            throw new ApplicationException(ApplicationErrorCode.FAILED_TO_CREATE_ACCOUNT);
         }
 
         AccountResponseDto accountResponseDto = mapper.toAccountResponseDto(savedAccount);
@@ -57,10 +47,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public TokenResponseDto login(AccountRequestDto accountRequestDto) {
         Account account = accountRepository.getByEmail(accountRequestDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+                .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.ACCOUNT_NOT_FOUND));
 
         if (!passwordEncoder.matches(accountRequestDto.getPassword(), account.getPassword())) {
-            throw new IllegalArgumentException("Invalid password");
+            throw new ApplicationException(ApplicationErrorCode.INCORRECT_EMAIL_OR_PASSWORD);
         }
 
         return TokenResponseDto.builder()
