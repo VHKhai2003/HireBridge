@@ -9,5 +9,4 @@ import lombok.Getter;
 public class AccountRequestDto {
     private String email;
     private String password;
-    private AccountType type;
 }

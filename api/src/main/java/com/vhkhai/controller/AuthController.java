@@ -17,16 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
      private final AccountService accountService;
 
-     @PostMapping("/register")
-     public ResponseEntity register(@RequestBody AccountRequestDto accountRequestDto) {
-          AccountResponseDto responseDto = accountService.create(accountRequestDto);
-          return new RestResponse<>()
-                    .withData(responseDto)
-                    .withStatus(200)
-                    .withMessage("Account created successfully")
-                    .buildHttpResponseEntity();
-     }
-
      @PostMapping("/login")
      public ResponseEntity login(@RequestBody AccountRequestDto accountRequestDto) {
           return new RestResponse<>()

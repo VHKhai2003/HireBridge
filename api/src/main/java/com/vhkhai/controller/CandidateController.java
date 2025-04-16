@@ -1,6 +1,10 @@
 package com.vhkhai.controller;
 
+import an.awesome.pipelinr.Pipeline;
 import com.vhkhai.aggrerates.account.Account;
+import com.vhkhai.command.RegisterCandidateCommand;
+import com.vhkhai.dto.account.AccountRequestDto;
+import com.vhkhai.dto.account.AccountResponseDto;
 import com.vhkhai.dto.candidate.CandidateUpdateProfileRequestDto;
 import com.vhkhai.exception.ApplicationErrorCode;
 import com.vhkhai.exception.ApplicationException;
@@ -9,6 +13,7 @@ import com.vhkhai.service.CandidateService;
 import com.vhkhai.utils.RestResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +26,20 @@ import java.util.UUID;
 public class CandidateController {
     private final UserAuthentication authenticatedUserProvider;
     private final CandidateService candidateService;
+    private final Pipeline pipeline;
+
+    @PostMapping("/register")
+    public ResponseEntity register(@RequestBody AccountRequestDto accountRequestDto) {
+
+        return new RestResponse<>()
+                .withData(pipeline.send(
+                        new RegisterCandidateCommand(
+                                accountRequestDto.getEmail(),
+                                accountRequestDto.getPassword())))
+                .withStatus(HttpStatus.CREATED.value())
+                .withMessage("Account created successfully")
+                .buildHttpResponseEntity();
+    }
 
     @GetMapping("/me")
     public ResponseEntity getMe() {

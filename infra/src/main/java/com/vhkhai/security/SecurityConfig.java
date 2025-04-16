@@ -14,7 +14,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final String[] publicUrls = {"/favicon.png", "/favicon.ico", "/", "/auth/login", "/auth/register"};
+    private static final String[] publicUrls = {
+            "/favicon.png", "/favicon.ico", "/", "/auth/login", "/auth/refresh-token",
+            "/candidate/register", "/company/register",
+            "/swagger-ui/**", "/v3/api-docs/**"
+    };
 
     private final JwtFilter jwtFilter;
 

@@ -24,10 +24,6 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private AccountType type;
 
-    public boolean login(String email, String hashedPassword) {
-        return this.email.equals(email) && this.password.equals(hashedPassword);
-    }
-
     public boolean isCompany() {
         return this.type == AccountType.COMPANY;
     }

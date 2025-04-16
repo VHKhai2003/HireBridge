@@ -12,6 +12,7 @@ public enum ApplicationErrorCode {
     ACCOUNT_NOT_FOUND(400002, "Account not found", 400),
     FAILED_TO_CREATE_ACCOUNT(400003, "Failed to create account", 400),
     INVALID_FILE(400004, "Invalid file", 400),
+    EMAIL_ALREADY_EXISTS(400005, "Email already exists", 400),
 
     CANDIDATE_NOT_FOUND(404001, "Candidate not found", 404),
     COMPANY_NOT_FOUND(404002, "Company not found", 404),
