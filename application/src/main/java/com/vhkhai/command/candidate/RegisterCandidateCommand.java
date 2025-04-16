@@ -1,14 +1,13 @@
-package com.vhkhai.command;
+package com.vhkhai.command.candidate;
 
 import an.awesome.pipelinr.Command;
-import com.vhkhai.dto.account.AccountRequestDto;
 import com.vhkhai.dto.account.AccountResponseDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class RegisterCompanyCommand implements Command<AccountResponseDto> {
+public class RegisterCandidateCommand implements Command<AccountResponseDto> {
     private final String email;
     private final String password;
 }

@@ -1,4 +1,4 @@
-package com.vhkhai.exception;
+package com.vhkhai.mapper;
 
 import com.vhkhai.aggrerates.company.Company;
 import com.vhkhai.dto.company.CompanyResponseDto;

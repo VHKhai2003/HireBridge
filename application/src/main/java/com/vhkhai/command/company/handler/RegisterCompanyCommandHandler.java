@@ -1,9 +1,9 @@
-package com.vhkhai.command.handler;
+package com.vhkhai.command.company.handler;
 
 import an.awesome.pipelinr.Command;
 import com.vhkhai.aggrerates.account.Account;
-import com.vhkhai.aggrerates.candidate.Candidate;
-import com.vhkhai.command.RegisterCandidateCommand;
+import com.vhkhai.aggrerates.company.Company;
+import com.vhkhai.command.company.RegisterCompanyCommand;
 import com.vhkhai.dto.account.AccountResponseDto;
 import com.vhkhai.dto.token.TokenResponseDto;
 import com.vhkhai.enumerations.AccountType;
@@ -13,37 +13,37 @@ import com.vhkhai.mapper.AccountDtoMapper;
 import com.vhkhai.port.Jwt;
 import com.vhkhai.port.PwEncoder;
 import com.vhkhai.repositories.AccountRepository;
-import com.vhkhai.repositories.CandidateRepository;
+import com.vhkhai.repositories.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class RegisterCandidateCommandHandler implements Command.Handler<RegisterCandidateCommand, AccountResponseDto> {
+public class RegisterCompanyCommandHandler implements Command.Handler<RegisterCompanyCommand, AccountResponseDto> {
 
     private final AccountRepository accountRepository;
-    private final CandidateRepository candidateRepository;
-    private final PwEncoder pwEncoder;
+    private final CompanyRepository companyRepository;
     private final Jwt jwt;
     private final AccountDtoMapper mapper;
+    private final PwEncoder pwEncoder;
 
     @Override
-    public AccountResponseDto handle(RegisterCandidateCommand command) {
+    public AccountResponseDto handle(RegisterCompanyCommand command) {
         // Check if the email already exists
         if (accountRepository.existsByEmail(command.getEmail())) {
             throw new ApplicationException(ApplicationErrorCode.EMAIL_ALREADY_EXISTS);
         }
         // Create a new account
         Account savedAccount = accountRepository.create(Account.builder()
-                        .email(command.getEmail())
-                        .password(pwEncoder.encode(command.getPassword()))
-                        .type(AccountType.CANDIDATE)
-                        .build());
-        // Create a new candidate
-        candidateRepository.create(Candidate.builder()
-                        .email(savedAccount.getEmail())
-                        .account(savedAccount)
-                        .build());
+                .email(command.getEmail())
+                .password(pwEncoder.encode(command.getPassword()))
+                .type(AccountType.COMPANY)
+                .build());
+        // Create a new company
+        companyRepository.create(Company.builder()
+                .email(savedAccount.getEmail())
+                .account(savedAccount)
+                .build());
 
         // genreate access token and refresh token
         String accessToken = jwt.generateAccessToken(savedAccount.getId());

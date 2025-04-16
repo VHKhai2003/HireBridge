@@ -1,15 +1,12 @@
 package com.vhkhai.controller;
 
 import an.awesome.pipelinr.Pipeline;
-import com.vhkhai.aggrerates.account.Account;
-import com.vhkhai.command.RegisterCandidateCommand;
+import com.vhkhai.command.candidate.RegisterCandidateCommand;
+import com.vhkhai.command.candidate.UpdateCandidateProfileCommand;
+import com.vhkhai.command.candidate.UploadCVCommand;
 import com.vhkhai.dto.account.AccountRequestDto;
-import com.vhkhai.dto.account.AccountResponseDto;
 import com.vhkhai.dto.candidate.CandidateUpdateProfileRequestDto;
-import com.vhkhai.exception.ApplicationErrorCode;
-import com.vhkhai.exception.ApplicationException;
-import com.vhkhai.port.UserAuthentication;
-import com.vhkhai.service.CandidateService;
+import com.vhkhai.query.candidate.GetCandidateProfileQuery;
 import com.vhkhai.utils.RestResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +21,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/candidate")
 public class CandidateController {
-    private final UserAuthentication authenticatedUserProvider;
-    private final CandidateService candidateService;
     private final Pipeline pipeline;
 
     @PostMapping("/register")
@@ -43,9 +38,8 @@ public class CandidateController {
 
     @GetMapping("/me")
     public ResponseEntity getMe() {
-        Account account = authenticatedUserProvider.getAuthenticatedUser();
         return new RestResponse<>()
-                .withData(candidateService.getCandidateByAccountId(account.getId()))
+                .withData(pipeline.send(new GetCandidateProfileQuery()))
                 .withStatus(200)
                 .withMessage("Get candidate successfully")
                 .buildHttpResponseEntity();
@@ -56,7 +50,7 @@ public class CandidateController {
                                           @Valid @RequestBody CandidateUpdateProfileRequestDto requestDto) {
 
         return new RestResponse<>()
-                .withData(candidateService.updateProfile(id, requestDto))
+                .withData(pipeline.send(new UpdateCandidateProfileCommand(id, requestDto)))
                 .withStatus(200)
                 .withMessage("Update candidate successfully")
                 .buildHttpResponseEntity();
@@ -67,7 +61,7 @@ public class CandidateController {
                                     @RequestParam("file") MultipartFile file) {
 
         return new RestResponse<>()
-                .withData(candidateService.uploadCV(id, file))
+                .withData(pipeline.send(new UploadCVCommand(id, file)))
                 .withStatus(200)
                 .withMessage("Upload CV successfully")
                 .buildHttpResponseEntity();

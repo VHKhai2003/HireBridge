@@ -1,12 +1,11 @@
 package com.vhkhai.controller;
 
 import an.awesome.pipelinr.Pipeline;
-import com.vhkhai.aggrerates.account.Account;
-import com.vhkhai.command.RegisterCompanyCommand;
+import com.vhkhai.command.company.RegisterCompanyCommand;
+import com.vhkhai.command.company.UpdateCompanyProfileCommand;
 import com.vhkhai.dto.account.AccountRequestDto;
 import com.vhkhai.dto.company.CompanyUpdateProfileRequestDto;
-import com.vhkhai.port.UserAuthentication;
-import com.vhkhai.service.CompanyService;
+import com.vhkhai.query.company.GetCompanyProfileQuery;
 import com.vhkhai.utils.RestResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/company")
 public class CompanyController {
-    private final UserAuthentication authenticatedUserProvider;
-    private final CompanyService companyService;
+
     private final Pipeline pipeline;
 
     @PostMapping("/register")
@@ -38,19 +36,18 @@ public class CompanyController {
 
     @GetMapping("/me")
     public ResponseEntity getMe() {
-        Account account = authenticatedUserProvider.getAuthenticatedUser();
         return new RestResponse<>()
-                .withData(companyService.getCompanyByAccountId(account.getId()))
+                .withData(pipeline.send(new GetCompanyProfileQuery()))
                 .withStatus(200)
                 .withMessage("Get company successfully")
                 .buildHttpResponseEntity();
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity updateProfile(@PathVariable UUID id,
                                         @Valid @RequestBody CompanyUpdateProfileRequestDto requestDto) {
         return new RestResponse<>()
-                .withData(companyService.updateCompanyProfile(id, requestDto))
+                .withData(pipeline.send(new UpdateCompanyProfileCommand(id, requestDto)))
                 .withStatus(200)
                 .withMessage("Update company successfully")
                 .buildHttpResponseEntity();
