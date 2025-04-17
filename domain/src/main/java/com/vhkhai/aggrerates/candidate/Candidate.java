@@ -2,6 +2,8 @@ package com.vhkhai.aggrerates.candidate;
 
 import com.vhkhai.aggrerates.account.Account;
 import com.vhkhai.aggrerates.company.Company;
+import com.vhkhai.exception.DomainErrorCode;
+import com.vhkhai.exception.DomainException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,13 +31,13 @@ public class Candidate {
     private String phone;
 
     @Column(name = "cv_link")
-    private String cvLink;
+    private String cv;
 
     @OneToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
-    @OneToMany(mappedBy = "candidate")
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL)
     private List<Following> followings;
 
     @OneToMany(mappedBy = "candidate")
@@ -52,10 +54,11 @@ public class Candidate {
     }
 
     public void followCompany(Company company) {
-        Following following = Following.builder()
-                .candidate(this)
-                .company(company)
-                .build();
+        // Check if the candidate is already following the company
+        if (this.followings.stream().anyMatch(f -> f.getCompany().equals(company))) {
+            throw new DomainException(DomainErrorCode.COMPANY_ALREADY_FOLLOWED);
+        }
+        Following following = new Following(new FollowingId(this.id, company.getId()), this, company);
         this.followings.add(following);
     }
 
@@ -66,6 +69,9 @@ public class Candidate {
                 .orElse(null);
         if (following != null) {
             this.followings.remove(following);
+        }
+        else {
+            throw new DomainException(DomainErrorCode.COMPANY_NOT_FOLLOWED);
         }
     }
 

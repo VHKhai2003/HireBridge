@@ -1,6 +1,7 @@
 package com.vhkhai.aggrerates.company;
 
 import com.vhkhai.aggrerates.account.Account;
+import com.vhkhai.enumerations.JobPostingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,4 +36,15 @@ public class Company {
 
     @OneToMany(mappedBy = "company")
     private List<JobPosting> jobPostings;
+
+
+    public void addJobPosting(String title, String requirement) {
+        JobPosting jobPosting = JobPosting.builder()
+                .title(title)
+                .requirement(requirement)
+                .company(this)
+                .status(JobPostingStatus.OPENED)
+                .build();
+        this.jobPostings.add(jobPosting);
+    }
 }

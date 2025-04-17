@@ -1,9 +1,8 @@
-package com.vhkhai.command.candidate.handler;
+package com.vhkhai.command.candidate;
 
 import an.awesome.pipelinr.Command;
 import com.vhkhai.aggrerates.account.Account;
 import com.vhkhai.aggrerates.candidate.Candidate;
-import com.vhkhai.command.candidate.UploadCVCommand;
 import com.vhkhai.dto.candidate.CandidateResponseDto;
 import com.vhkhai.exception.ApplicationErrorCode;
 import com.vhkhai.exception.ApplicationException;
@@ -11,22 +10,37 @@ import com.vhkhai.mapper.CandidateMapper;
 import com.vhkhai.port.Uploader;
 import com.vhkhai.port.UserAuthentication;
 import com.vhkhai.repositories.CandidateRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.UUID;
+
+@RequiredArgsConstructor
+@Getter
+public class UploadCVCommand implements Command<String> {
+    private final UUID candidateId;
+    private final MultipartFile file;
+}
+
 
 @RequiredArgsConstructor
 @Component
-public class UploadCVCommandHandler implements Command.Handler<UploadCVCommand, CandidateResponseDto> {
+class UploadCVCommandHandler implements Command.Handler<UploadCVCommand, String> {
 
     private final UserAuthentication userAuthentication;
     private final CandidateRepository candidateRepository;
     private final CandidateMapper candidateMapper;
     private final Uploader uploader;
 
+    private static final List<String> allowedTypes = List.of("application/pdf");
+
     @Override
     @Transactional
-    public CandidateResponseDto handle(UploadCVCommand command) {
+    public String handle(UploadCVCommand command) {
 
         Account account = userAuthentication.getAuthenticatedUser();
         Candidate candidate = candidateRepository.getById(command.getCandidateId())
@@ -35,15 +49,18 @@ public class UploadCVCommandHandler implements Command.Handler<UploadCVCommand, 
             throw new ApplicationException(ApplicationErrorCode.ACCESS_DENIED);
         }
 
+        if (!allowedTypes.contains(command.getFile().getContentType())) {
+            throw new ApplicationException(ApplicationErrorCode.INVALID_FILE);
+        }
+
         if (command.getFile().isEmpty()) {
             throw new ApplicationException(ApplicationErrorCode.INVALID_FILE);
         }
 
-        String cvLink = uploader.uploadFile(command.getFile(), "cv");
-        candidate.setCvLink(cvLink);
-
+        String publicId = uploader.uploadPrivateFile(command.getFile(), "cv");
+        candidate.setCv(publicId);
         candidateRepository.update(candidate);
-
-        return candidateMapper.toDto(candidate);
+        return publicId;
     }
 }
+

@@ -1,12 +1,15 @@
 package com.vhkhai.controller;
 
 import an.awesome.pipelinr.Pipeline;
+import com.vhkhai.command.candidate.FollowCompanyCommand;
 import com.vhkhai.command.candidate.RegisterCandidateCommand;
 import com.vhkhai.command.candidate.UpdateCandidateProfileCommand;
 import com.vhkhai.command.candidate.UploadCVCommand;
 import com.vhkhai.dto.account.AccountRequestDto;
 import com.vhkhai.dto.candidate.CandidateUpdateProfileRequestDto;
+import com.vhkhai.dto.candidate.FollowCompanyRequestDto;
 import com.vhkhai.query.candidate.GetCandidateProfileQuery;
+import com.vhkhai.query.candidate.GetFollowingsQuery;
 import com.vhkhai.utils.RestResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +67,24 @@ public class CandidateController {
                 .withData(pipeline.send(new UploadCVCommand(id, file)))
                 .withStatus(200)
                 .withMessage("Upload CV successfully")
+                .buildHttpResponseEntity();
+    }
+
+    @PostMapping("follow-company")
+    public ResponseEntity followCompany(@RequestBody FollowCompanyRequestDto followCompanyRequestDto) {
+        pipeline.send(new FollowCompanyCommand(followCompanyRequestDto.getCompanyId()));
+        return new RestResponse<>()
+                .withStatus(200)
+                .withMessage("Follow company successfully")
+                .buildHttpResponseEntity();
+    }
+
+    @GetMapping("/followings")
+    public ResponseEntity getFollowings() {
+        return new RestResponse<>()
+                .withData(pipeline.send(new GetFollowingsQuery()))
+                .withStatus(200)
+                .withMessage("Get followings successfully")
                 .buildHttpResponseEntity();
     }
 }

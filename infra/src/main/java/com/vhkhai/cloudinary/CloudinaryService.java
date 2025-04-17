@@ -19,23 +19,30 @@ import java.util.Map;
 public class CloudinaryService implements Uploader {
 
     private final Cloudinary cloudinary;
+    private enum AccessMode {
+        PUBLIC("public"),
+        PRIVATE("private");
+
+        private final String value;
+
+        AccessMode(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+    
 
     @Override
-    public String uploadFile(MultipartFile file, String folder) {
-        try {
-            Map<String, Object> options = ObjectUtils.asMap(
-                    "folder", folder,
-                    "resource_type", "raw",
-                    "format", "pdf",
-                    "overwrite", true,
-                    "access_mode", "public"
-            );
-            Map result = cloudinary.uploader().upload(file.getBytes(), options);
-            return result.get("secure_url").toString();
-        }
-        catch (IOException exception) {
-            throw new InfrastructureException(ErrorCode.FAILED_TO_UPLOAD_FILE);
-        }
+    public String uploadPublicFile(MultipartFile file, String folder) {
+       return uploadFile(file, folder, AccessMode.PUBLIC);
+    }
+
+    @Override
+    public String uploadPrivateFile(MultipartFile file, String folder) {
+        return uploadFile(file, folder, AccessMode.PRIVATE);
     }
 
     @Override
@@ -50,4 +57,68 @@ public class CloudinaryService implements Uploader {
             throw new InfrastructureException(ErrorCode.FAILED_TO_DELETE_FILE);
         }
     }
+
+
+    @Override
+    public String generateSignedUrl(String publicId, long expirationTime) {
+        return cloudinary.url()
+                .resourceType(determineResourceType(publicId))
+                .type("private")
+                .secure(true)
+                .signed(true)
+                .publicId(publicId)
+                .generate();
+    }
+
+    private String uploadFile(MultipartFile file, String folder, AccessMode accessMode) {
+        try {
+            Map<String, Object> options = ObjectUtils.asMap(
+                    "folder", folder,
+                    "resource_type", determineResourceType(file),
+                    "format", extractFormat(file),
+                    "type", accessMode.getValue()
+            );
+            Map result = cloudinary.uploader().upload(file.getBytes(), options);
+            if(accessMode == AccessMode.PRIVATE) {
+                return result.get("public_id").toString();
+            }
+            return result.get("secure_url").toString();
+        }
+        catch (IOException exception) {
+            throw new InfrastructureException(ErrorCode.FAILED_TO_UPLOAD_FILE);
+        }
+    }
+
+    private String extractFormat(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename != null && originalFilename.contains(".")) {
+            return originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
+        }
+        return "bin";
+    }
+
+    private String determineResourceType(MultipartFile file) {
+        String mimeType = file.getContentType();
+        if (mimeType == null) return "raw";
+
+        if (mimeType.startsWith("image/")) {
+            return "image";
+        } else if (mimeType.startsWith("video/")) {
+            return "video";
+        } else {
+            return "raw"; // default for pdf, doc, zip, v.v.
+        }
+    }
+
+    private String determineResourceType(String publicId) {
+        String extension = publicId.substring(publicId.lastIndexOf('.') + 1);
+        if (extension.equals("jpg") || extension.equals("png") || extension.equals("gif")) {
+            return "image";
+        } else if (extension.equals("mp4")) {
+            return "video";
+        } else {
+            return "raw"; // default for pdf, doc, zip, v.v.
+        }
+    }
+
 }
