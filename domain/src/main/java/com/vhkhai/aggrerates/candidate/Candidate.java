@@ -75,4 +75,37 @@ public class Candidate {
         }
     }
 
+    public void updateProfile(String fullName, String phone) {
+
+        if (checkFullName(fullName) == false) {
+            throw new DomainException(DomainErrorCode.INVALID_FULLNAME);
+        }
+        if (checkPhone(phone) == false) {
+            throw new DomainException(DomainErrorCode.INVALID_PHONE);
+        }
+
+        this.fullName = fullName;
+        this.phone = phone;
+    }
+
+    public void updateCV(String cv) {
+        this.cv = cv;
+    }
+
+
+    private boolean checkFullName(String fullName) {
+        if (fullName == null || fullName.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkPhone(String phone) {
+        String regex = "^\\+?[0-9]{9,15}$";
+        if (phone == null || phone.isEmpty() || !phone.matches(regex)) {
+            return false;
+        }
+        return true;
+    }
+
 }

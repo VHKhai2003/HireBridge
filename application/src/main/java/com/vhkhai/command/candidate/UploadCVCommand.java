@@ -51,14 +51,14 @@ class UploadCVCommandHandler implements Command.Handler<UploadCVCommand, String>
 
         // validation
         if (!allowedTypes.contains(command.getFile().getContentType())) {
-            throw new ApplicationException(ApplicationErrorCode.INVALID_FILE);
+            throw new ApplicationException(ApplicationErrorCode.PDF_FILE_IS_REQUIRED);
         }
         if (command.getFile().isEmpty()) {
             throw new ApplicationException(ApplicationErrorCode.INVALID_FILE);
         }
 
         String publicId = uploader.uploadPrivateFile(command.getFile(), "cv");
-        candidate.setCv(publicId);
+        candidate.updateCV(publicId);
         candidateRepository.update(candidate);
         return publicId;
     }

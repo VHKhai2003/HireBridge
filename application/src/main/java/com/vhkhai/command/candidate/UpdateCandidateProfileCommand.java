@@ -45,9 +45,8 @@ class UpdateCandidateProfileCommandHandler implements Command.Handler<UpdateCand
             throw new ApplicationException(ApplicationErrorCode.ACCESS_DENIED);
         }
 
-        // tao method update profile and validation on it
-        candidate.setFullName(command.getRequestDto().getFullName());
-        candidate.setPhone(command.getRequestDto().getPhone());
+
+        candidate.updateProfile(command.getRequestDto().getFullName(), command.getRequestDto().getPhone());
 
         Candidate savedCandidate = candidateRepository.update(candidate);
         // if FE don't need user info after update, we can remove it then reponse boolean

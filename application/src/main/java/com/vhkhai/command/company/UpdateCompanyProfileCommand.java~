@@ -46,9 +46,9 @@ class UpdateCompanyProfileCommandHandler implements Command.Handler<UpdateCompan
             throw new ApplicationException(ApplicationErrorCode.ACCESS_DENIED);
         }
 
-        company.updateProfile(command.getRequestDto().getName(),
-                command.getRequestDto().getPhone(),
-                command.getRequestDto().getAddress());
+        company.setName(command.getRequestDto().getName());
+        company.setPhone(command.getRequestDto().getPhone());
+        company.setAddress(command.getRequestDto().getAddress());
 
         Company savedCompany = companyRepository.update(company);
 
