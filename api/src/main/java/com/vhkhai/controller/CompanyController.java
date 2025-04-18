@@ -1,10 +1,12 @@
 package com.vhkhai.controller;
 
 import an.awesome.pipelinr.Pipeline;
+import com.vhkhai.command.company.AddJobPostingCommand;
 import com.vhkhai.command.company.RegisterCompanyCommand;
 import com.vhkhai.command.company.UpdateCompanyProfileCommand;
 import com.vhkhai.dto.account.AccountRequestDto;
 import com.vhkhai.dto.company.CompanyUpdateProfileRequestDto;
+import com.vhkhai.dto.job_posting.JobPostingRequestDto;
 import com.vhkhai.query.company.GetCompanyProfileQuery;
 import com.vhkhai.utils.RestResponse;
 import jakarta.validation.Valid;
@@ -50,6 +52,17 @@ public class CompanyController {
                 .withData(pipeline.send(new UpdateCompanyProfileCommand(id, requestDto)))
                 .withStatus(200)
                 .withMessage("Update company successfully")
+                .buildHttpResponseEntity();
+    }
+
+    @PostMapping("add-job-posting")
+    public ResponseEntity addJobPosting(@Valid @RequestBody JobPostingRequestDto requestDto) {
+
+        pipeline.send(new AddJobPostingCommand(requestDto.getTitle(), requestDto.getRequirement()));
+
+        return new RestResponse<>()
+                .withStatus(200)
+                .withMessage("Add job posting successfully")
                 .buildHttpResponseEntity();
     }
 

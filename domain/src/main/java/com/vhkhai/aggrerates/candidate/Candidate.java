@@ -7,6 +7,7 @@ import com.vhkhai.exception.DomainException;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,12 +41,14 @@ public class Candidate {
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL)
     private List<Following> followings;
 
-    @OneToMany(mappedBy = "candidate")
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Notification> notifications;
 
 
     public void receiveNotification(String title, String content) {
         Notification notification = Notification.builder()
+                .createdAt(LocalDateTime.now())
+                .id(UUID.randomUUID())
                 .title(title)
                 .content(content)
                 .candidate(this)

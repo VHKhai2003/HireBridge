@@ -2,10 +2,12 @@ package com.vhkhai.aggrerates.company;
 
 import com.vhkhai.aggrerates.account.Account;
 import com.vhkhai.enumerations.JobPostingStatus;
+import com.vhkhai.events.JobPostingCreationEvent;
 import com.vhkhai.exception.DomainErrorCode;
 import com.vhkhai.exception.DomainException;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +20,7 @@ import java.util.UUID;
 @Setter
 @Builder
 @EqualsAndHashCode(of = {"id"})
-public class Company {
+public class Company extends AbstractAggregateRoot<Company> {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -41,13 +43,9 @@ public class Company {
 
 
     public void addJobPosting(String title, String requirement) {
-        JobPosting jobPosting = JobPosting.builder()
-                .title(title)
-                .requirement(requirement)
-                .company(this)
-                .status(JobPostingStatus.OPENED)
-                .build();
+        JobPosting jobPosting = new JobPosting(UUID.randomUUID(), title, requirement, JobPostingStatus.OPENED, this);
         this.jobPostings.add(jobPosting);
+        registerEvent(new JobPostingCreationEvent(jobPosting));
     }
 
     public void updateProfile(String name, String phone, String address) {
