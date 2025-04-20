@@ -20,6 +20,8 @@ public enum DomainErrorCode {
     CANNOT_CANCEL_INTERVIEW(4003, "Cannot cancel interview"),
     CANNOT_COMPLETE_INTERVIEW(4004, "Cannot complete interview"),
     CANNOT_CONDUCT_INTERVIEW(4005, "Cannot update interview"),
+    JOB_APPLICATION_ALREADY_EXISTS(4006, "Job application already exists"),
+    JOB_APPLICATION_NOT_FOUND(4007, "Job application not found"),
     ;
 
 

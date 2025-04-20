@@ -41,6 +41,14 @@ public class JobApplication {
     @OneToMany(mappedBy = "jobApplication", cascade = CascadeType.ALL)
     private List<Interview> interviews;
 
+    public JobApplication(Candidate candidate, JobPosting jobPosting) {
+        this.id = UUID.randomUUID();
+        this.candidate = candidate;
+        this.jobPosting = jobPosting;
+        this.status = ApplicationStatus.PENDING;
+        this.interviews = List.of();
+    }
+
 
     public void reject() {
         if(this.status == ApplicationStatus.OFFERED || this.status == ApplicationStatus.REJECTED) return;

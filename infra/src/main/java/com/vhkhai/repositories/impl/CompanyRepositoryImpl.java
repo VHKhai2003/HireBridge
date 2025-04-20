@@ -1,8 +1,10 @@
 package com.vhkhai.repositories.impl;
 
 import com.vhkhai.aggrerates.company.Company;
+import com.vhkhai.aggrerates.company.JobPosting;
 import com.vhkhai.repositories.CompanyRepository;
 import com.vhkhai.repositories.jpa.CompanyRepositoryJpa;
+import com.vhkhai.repositories.jpa.JobPostingRepositoryJpa;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +16,7 @@ import java.util.UUID;
 public class CompanyRepositoryImpl implements CompanyRepository {
 
     private final CompanyRepositoryJpa companyRepositoryJpa;
+    private final JobPostingRepositoryJpa jobPostingRepositoryJpa;
 
     @Override
     public Company create(Company company) {
@@ -38,5 +41,10 @@ public class CompanyRepositoryImpl implements CompanyRepository {
     @Override
     public Optional<Company> findByAccountId(UUID accountId) {
         return companyRepositoryJpa.findByAccountId(accountId);
+    }
+
+    @Override
+    public Optional<JobPosting> findJobPostingById(UUID jobPostingId) {
+        return jobPostingRepositoryJpa.findById(jobPostingId);
     }
 }

@@ -3,8 +3,7 @@ package com.vhkhai.aggrerates.job_application;
 import com.vhkhai.enumerations.InterviewStatus;
 import com.vhkhai.exception.DomainErrorCode;
 import com.vhkhai.exception.DomainException;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -16,12 +15,23 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(of = "id")
+@Entity
+@Table(name = "interviews")
 public class Interview {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(name = "start_time")
     private LocalDateTime startTime;
+
     private Integer duration;
+
+    @Column(name = "is_online")
     private Boolean isOnline;
+
     private String link;
+
     private InterviewStatus status;
 
     @ManyToOne

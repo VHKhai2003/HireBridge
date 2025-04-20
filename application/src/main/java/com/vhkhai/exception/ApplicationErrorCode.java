@@ -18,6 +18,8 @@ public enum ApplicationErrorCode {
 
     CANDIDATE_NOT_FOUND(404001, "Candidate not found", 404),
     COMPANY_NOT_FOUND(404002, "Company not found", 404),
+    JOB_POSTING_NOT_FOUND(404003, "Job posting not found", 404),
+    INTERVIEW_NOT_FOUND(404004, "Interview not found", 404),
 
     ACCESS_DENIED(403001, "Access denied", 403);
 

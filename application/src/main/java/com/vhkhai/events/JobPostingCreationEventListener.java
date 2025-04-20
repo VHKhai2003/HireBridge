@@ -17,7 +17,7 @@ import java.util.List;
 public class JobPostingCreationEventListener {
 
     private final CandidateRepository candidateRepository;
-    
+
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handle(JobPostingCreationEvent event) {
