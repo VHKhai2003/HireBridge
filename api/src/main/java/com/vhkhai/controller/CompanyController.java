@@ -55,11 +55,10 @@ public class CompanyController {
                 .buildHttpResponseEntity();
     }
 
-    @PostMapping("add-job-posting")
+    @PostMapping("/add-job-posting")
     public ResponseEntity addJobPosting(@Valid @RequestBody JobPostingRequestDto requestDto) {
 
         pipeline.send(new AddJobPostingCommand(requestDto.getTitle(), requestDto.getRequirement()));
-
         return new RestResponse<>()
                 .withStatus(200)
                 .withMessage("Add job posting successfully")

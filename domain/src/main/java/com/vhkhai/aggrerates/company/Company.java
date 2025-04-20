@@ -48,6 +48,10 @@ public class Company extends AbstractAggregateRoot<Company> {
         registerEvent(new JobPostingCreationEvent(jobPosting));
     }
 
+    public JobPosting getJobPosting(UUID id) {
+        return jobPostings.stream().filter(jobPosting -> jobPosting.getId().equals(id)).findFirst().orElse(null);
+    }
+
     public void updateProfile(String name, String phone, String address) {
         if(checkName(name) == false) {
             throw new DomainException(DomainErrorCode.INVALID_COMPANY_NAME);
