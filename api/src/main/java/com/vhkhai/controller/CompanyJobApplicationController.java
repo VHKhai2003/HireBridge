@@ -2,25 +2,29 @@ package com.vhkhai.controller;
 
 import an.awesome.pipelinr.Pipeline;
 import com.vhkhai.command.job_application.ApplyJobCommand;
-import com.vhkhai.dto.job_application.JobApplicationRequestDto;
+import com.vhkhai.query.company.GetJobApplicationsQuery;
 import com.vhkhai.utils.RestResponse;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
-@RequestMapping("/candidate/job-application")
+@RequestMapping("/company/job-application")
 @RequiredArgsConstructor
-public class CandidateJobApplicationController {
+public class CompanyJobApplicationController {
     private final Pipeline pipeline;
 
-    @PostMapping("/apply")
-    public ResponseEntity applyJob(@RequestBody JobApplicationRequestDto jobApplicationRequestDto) {
+    @GetMapping("")
+    public ResponseEntity getJobApplications(@NotNull @RequestParam(name = "jobId") UUID jobId) {
+
         return new RestResponse<>()
-                .withData(pipeline.send(new ApplyJobCommand(jobApplicationRequestDto.getJobPostingId())))
+                .withData(pipeline.send(new GetJobApplicationsQuery(jobId)))
                 .withStatus(200)
                 .withMessage("Apply for job successfully")
                 .buildHttpResponseEntity();

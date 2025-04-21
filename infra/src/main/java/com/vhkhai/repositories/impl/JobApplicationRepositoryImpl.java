@@ -6,6 +6,7 @@ import com.vhkhai.repositories.jpa.JobApplicationRepositoryJpa;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,6 +19,16 @@ public class JobApplicationRepositoryImpl implements JobApplicationRepository {
     @Override
     public boolean existsByCandidateIdAndJobPostingId(UUID candidateId, UUID jobPostingId) {
         return jpaRepository.existsByCandidateIdAndJobPostingId(candidateId, jobPostingId);
+    }
+
+    @Override
+    public List<JobApplication> findByJobPostingId(UUID jobPostingId) {
+        return jpaRepository.findByJobPostingId(jobPostingId);
+    }
+
+    @Override
+    public List<JobApplication> findByCandidateId(UUID candidateId) {
+        return jpaRepository.findByCandidateId(candidateId);
     }
 
     @Override

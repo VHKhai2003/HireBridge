@@ -1,4 +1,0 @@
-package com.vhkhai.repositories.impl;
-
-public class JobApplicationRepositoryImpl {
-}
