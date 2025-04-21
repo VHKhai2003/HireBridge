@@ -1,19 +1,24 @@
 package com.vhkhai.controller;
 
-import com.vhkhai.port.Uploader;
+import com.vhkhai.service.MediaService;
+import com.vhkhai.utils.RestResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.Instant;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/file")
 public class FileController {
-    private final Uploader uploader;
+    private final MediaService mediaService;
 
     @GetMapping("signed-url")
-    public String getSignedUrl(@RequestParam String publicId) {
-        return uploader.generateSignedUrl(publicId, Instant.now().getEpochSecond() + 3600);
+    public ResponseEntity getSignedUrl(@RequestParam String publicId) {
+        return new RestResponse<>()
+                .withData(mediaService.signedUrl(publicId))
+                .withStatus(HttpStatus.OK.value())
+                .withMessage("Get signed url successfully")
+                .buildHttpResponseEntity();
     }
 }
