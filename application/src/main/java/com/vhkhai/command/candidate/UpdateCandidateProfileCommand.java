@@ -12,6 +12,7 @@ import com.vhkhai.port.UserAuthentication;
 import com.vhkhai.repositories.CandidateRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,7 @@ class UpdateCandidateProfileCommandHandler implements Command.Handler<UpdateCand
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('CANDIDATE')")
     public CandidateResponseDto handle(UpdateCandidateProfileCommand command) {
         Account account = userAuthentication.getAuthenticatedUser();
 
@@ -49,11 +51,6 @@ class UpdateCandidateProfileCommandHandler implements Command.Handler<UpdateCand
         candidate.updateProfile(command.getRequestDto().getFullName(), command.getRequestDto().getPhone());
 
         Candidate savedCandidate = candidateRepository.update(candidate);
-        // if FE don't need user info after update, we can remove it then reponse boolean
         return candidateMapper.toDto(savedCandidate);
-        // KISS principle: Keep It Simple, Stupid
-        // YAGNI: You Ain't Gonna Need It
-        // SOLID principles: Single Responsibility Principle, Open/Closed Principle, Liskov Substitution Principle, Interface Segregation Principle, Dependency Inversion Principle
-
     }
 }

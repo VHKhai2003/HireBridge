@@ -1,13 +1,14 @@
 package com.vhkhai.controller;
 
 import an.awesome.pipelinr.Pipeline;
-import com.vhkhai.command.company.AddJobPostingCommand;
-import com.vhkhai.command.company.RegisterCompanyCommand;
+import com.vhkhai.command.candidate.FollowCompanyCommand;
+import com.vhkhai.command.company.CreateCompanyCommand;
 import com.vhkhai.command.company.UpdateCompanyProfileCommand;
-import com.vhkhai.dto.account.AccountRequestDto;
+import com.vhkhai.dto.account.AccountResponseDto;
+import com.vhkhai.dto.company.CompanyResponseDto;
 import com.vhkhai.dto.company.CompanyUpdateProfileRequestDto;
-import com.vhkhai.dto.job_posting.JobPostingRequestDto;
-import com.vhkhai.query.company.GetCompanyProfileQuery;
+import com.vhkhai.port.UserAuthentication;
+import com.vhkhai.query.company.GetCompanyQuery;
 import com.vhkhai.utils.RestResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,49 +20,48 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/company")
+@RequestMapping("/companies")
 public class CompanyController {
 
     private final Pipeline pipeline;
+    private final UserAuthentication userAuthentication;
 
-    @PostMapping("/register")
-    public ResponseEntity register(@RequestBody AccountRequestDto accountRequestDto) {
+    @PostMapping("/create")
+    public ResponseEntity<AccountResponseDto> register(@Valid @RequestBody CreateCompanyCommand command) {
         return new RestResponse<>()
-                .withData(pipeline.send(
-                        new RegisterCompanyCommand(
-                            accountRequestDto.getEmail(),
-                            accountRequestDto.getPassword())))
+                .withData(pipeline.send(command))
                 .withStatus(HttpStatus.CREATED.value())
                 .withMessage("Account created successfully")
                 .buildHttpResponseEntity();
     }
 
-    @GetMapping("/me")
-    public ResponseEntity getMe() {
+    @GetMapping("/{id}")
+    public ResponseEntity<CompanyResponseDto> getCompany(@PathVariable UUID id) {
         return new RestResponse<>()
-                .withData(pipeline.send(new GetCompanyProfileQuery()))
+                .withData(pipeline.send(new GetCompanyQuery(id)))
                 .withStatus(200)
                 .withMessage("Get company successfully")
                 .buildHttpResponseEntity();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity updateProfile(@PathVariable UUID id,
-                                        @Valid @RequestBody CompanyUpdateProfileRequestDto requestDto) {
+    public ResponseEntity<CompanyResponseDto> updateProfile(
+            @PathVariable(name = "id") UUID companyId,
+            @Valid @RequestBody CompanyUpdateProfileRequestDto requestDto) {
         return new RestResponse<>()
-                .withData(pipeline.send(new UpdateCompanyProfileCommand(id, requestDto)))
+                .withData(pipeline.send(new UpdateCompanyProfileCommand(companyId, requestDto)))
                 .withStatus(200)
                 .withMessage("Update company successfully")
                 .buildHttpResponseEntity();
     }
 
-    @PostMapping("/add-job-posting")
-    public ResponseEntity addJobPosting(@Valid @RequestBody JobPostingRequestDto requestDto) {
-
-        pipeline.send(new AddJobPostingCommand(requestDto.getTitle(), requestDto.getRequirement()));
+    @PostMapping("/{id}/follow")
+    public ResponseEntity<CompanyResponseDto> followCompany(@PathVariable(name = "id" ) UUID companyId) {
+        UUID accountId = userAuthentication.getAuthenticatedUser().getId();
         return new RestResponse<>()
+                .withData(pipeline.send(new FollowCompanyCommand(companyId, accountId)))
                 .withStatus(200)
-                .withMessage("Add job posting successfully")
+                .withMessage("Follow company successfully")
                 .buildHttpResponseEntity();
     }
 

@@ -31,9 +31,14 @@ public class AccountServiceImpl implements AccountService {
             throw new ApplicationException(ApplicationErrorCode.INCORRECT_EMAIL_OR_PASSWORD);
         }
 
+        return generateToken(account.getId());
+    }
+
+    @Override
+    public TokenResponseDto generateToken(UUID id) {
         return TokenResponseDto.builder()
-                .accessToken(jwtProvider.generateAccessToken(account.getId()))
-                .refreshToken(jwtProvider.generateRefreshToken(account.getId()))
+                .accessToken(jwtProvider.generateAccessToken(id))
+                .refreshToken(jwtProvider.generateRefreshToken(id))
                 .build();
     }
 

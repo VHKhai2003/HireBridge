@@ -16,7 +16,6 @@ import java.util.UUID;
 public class CompanyRepositoryImpl implements CompanyRepository {
 
     private final CompanyRepositoryJpa companyRepositoryJpa;
-    private final JobPostingRepositoryJpa jobPostingRepositoryJpa;
 
     @Override
     public Company create(Company company) {
@@ -43,8 +42,4 @@ public class CompanyRepositoryImpl implements CompanyRepository {
         return companyRepositoryJpa.findByAccountId(accountId);
     }
 
-    @Override
-    public Optional<JobPosting> findJobPostingById(UUID jobPostingId) {
-        return jobPostingRepositoryJpa.findById(jobPostingId);
-    }
 }

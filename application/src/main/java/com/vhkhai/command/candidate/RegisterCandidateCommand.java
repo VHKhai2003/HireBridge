@@ -33,7 +33,6 @@ class RegisterCandidateCommandHandler implements Command.Handler<RegisterCandida
     private final AccountRepository accountRepository;
     private final CandidateRepository candidateRepository;
     private final PwEncoder pwEncoder;
-    private final Jwt jwt;
     private final AccountDtoMapper mapper;
 
     @Override
@@ -54,13 +53,7 @@ class RegisterCandidateCommandHandler implements Command.Handler<RegisterCandida
                 .account(savedAccount)
                 .build());
 
-        // genreate access token and refresh token
-        String accessToken = jwt.generateAccessToken(savedAccount.getId());
-        String refreshToken = jwt.generateRefreshToken(savedAccount.getId());
-        AccountResponseDto accountResponseDto = mapper.toAccountResponseDto(savedAccount);
-        accountResponseDto.setToken(new TokenResponseDto(accessToken, refreshToken));
-
-        return accountResponseDto;
+        return mapper.toAccountResponseDto(savedAccount);
     }
 }
 

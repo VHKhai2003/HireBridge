@@ -12,6 +12,7 @@ import com.vhkhai.port.UserAuthentication;
 import com.vhkhai.repositories.CompanyRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,11 +36,12 @@ class UpdateCompanyProfileCommandHandler implements Command.Handler<UpdateCompan
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('COMPANY')")
     public CompanyResponseDto handle(UpdateCompanyProfileCommand command) {
 
-        Account account = userAuthentication.getAuthenticatedUser();
+        var account = userAuthentication.getAuthenticatedUser();
 
-        Company company = companyRepository.getById(command.getCompanyId())
+        var company = companyRepository.getById(command.getCompanyId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));
 
         if (!account.equals(company.getAccount())) {

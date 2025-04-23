@@ -1,44 +1,43 @@
 package com.vhkhai.query.candidate;
 
-import com.vhkhai.aggrerates.candidate.Candidate;
 import com.vhkhai.dto.company.CompanyResponseDto;
 import com.vhkhai.exception.ApplicationErrorCode;
 import com.vhkhai.exception.ApplicationException;
 import com.vhkhai.mapper.CompanyMapper;
-import com.vhkhai.port.UserAuthentication;
 import com.vhkhai.query.iquery.Query;
 import com.vhkhai.repositories.CandidateRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
-public class GetFollowingsQuery implements Query<List<CompanyResponseDto>> {
+@RequiredArgsConstructor
+@Getter
+public class GetFollowedCompaniesQuery implements Query<List<CompanyResponseDto>> {
+    private final UUID accountId;
 }
-
-
 
 @Component
 @RequiredArgsConstructor
-class GetFollowingsQueryHandler implements Query.Handler<GetFollowingsQuery, List<CompanyResponseDto>> {
+class GetFollowedCompaniesQueryHandler implements Query.Handler<GetFollowedCompaniesQuery, List<CompanyResponseDto>> {
 
-    private final UserAuthentication userAuthentication;
     private final CandidateRepository candidateRepository;
     private final CompanyMapper companyMapper;
 
     @Override
-    public List<CompanyResponseDto> handle(GetFollowingsQuery command) {
-
-        Candidate candidate = candidateRepository.findByAccountId(userAuthentication.getAuthenticatedUser().getId())
+    @PreAuthorize("hasRole('CANDIDATE')")
+    public List<CompanyResponseDto> handle(GetFollowedCompaniesQuery query) {
+        var candidate = candidateRepository.findByAccountId(query.getAccountId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.CANDIDATE_NOT_FOUND));
         if (candidate.getFollowings() == null || candidate.getFollowings().isEmpty()) {
             return List.of();
         }
-
-        List<CompanyResponseDto> companyResponseDtos = candidate.getFollowings().stream()
+        var companyResponseDtos = candidate.getFollowings().stream()
                 .map(f -> companyMapper.toDto(f.getCompany()))
                 .toList();
-
         return companyResponseDtos;
     }
 }

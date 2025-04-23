@@ -3,6 +3,7 @@ package com.vhkhai.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -12,11 +13,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @RequiredArgsConstructor
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 
     private static final String[] publicUrls = {
             "/favicon.png", "/favicon.ico", "/", "/auth/login", "/auth/refresh-token",
-            "/candidate/register", "/company/register",
+            "/candidates/register", "/companies/create",
             "/swagger-ui/**", "/v3/api-docs/**"
     };
 
@@ -34,8 +36,6 @@ public class SecurityConfig {
                 .formLogin(login -> login.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(publicUrls).permitAll()
-                        .requestMatchers("/candidate/**").hasRole("CANDIDATE")
-                        .requestMatchers("/company/**").hasRole("COMPANY")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exHandler -> exHandler

@@ -18,10 +18,19 @@ public class JobApplicationDomainServiceImpl implements JobApplicationDomainServ
 
     @Override
     public JobApplication applyJob(Candidate candidate, JobPosting jobPosting) {
+
+        if(candidate.getCv() == null || candidate.getCv().isBlank()) {
+            throw new DomainException(DomainErrorCode.CANDIDATE_HAS_NO_CV);
+        }
+
         // check if the job application already exists
         if(jobApplicationRepository.existsByCandidateIdAndJobPostingId(candidate.getId(), jobPosting.getId())) {
             throw new DomainException(DomainErrorCode.JOB_APPLICATION_ALREADY_EXISTS);
         }
+
+        //company.ScheduleInterview(candidate, jobPosting);
+        //candidate.ScheduleInterview(jobPosting);
+        //jobPosting.ScheduleInterview(candidate);
 
         var jobApplication = new JobApplication(candidate, jobPosting);
         return jobApplicationRepository.create(jobApplication);

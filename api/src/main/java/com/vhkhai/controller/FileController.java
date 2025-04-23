@@ -14,11 +14,12 @@ public class FileController {
     private final MediaService mediaService;
 
     @GetMapping("signed-url")
-    public ResponseEntity getSignedUrl(@RequestParam String publicId) {
+    public ResponseEntity<String> getSignedUrl(@RequestParam String publicId) {
         return new RestResponse<>()
                 .withData(mediaService.signedUrl(publicId))
                 .withStatus(HttpStatus.OK.value())
                 .withMessage("Get signed url successfully")
                 .buildHttpResponseEntity();
     }
+    // TODO all image, file .etc
 }

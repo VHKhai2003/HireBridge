@@ -9,5 +9,4 @@ import java.util.UUID;
 
 public interface CompanyRepository extends BaseRepository<Company, UUID> {
     Optional<Company> findByAccountId(UUID accountId);
-    Optional<JobPosting> findJobPostingById(UUID jobPostingId);
 }

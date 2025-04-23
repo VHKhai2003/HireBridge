@@ -4,6 +4,7 @@ import com.vhkhai.aggrerates.candidate.Candidate;
 import com.vhkhai.aggrerates.company.JobPosting;
 import com.vhkhai.enumerations.ApplicationStatus;
 import com.vhkhai.enumerations.InterviewStatus;
+import com.vhkhai.events.InterviewScheduledEvent;
 import com.vhkhai.exception.DomainErrorCode;
 import com.vhkhai.exception.DomainException;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class JobApplication {
+public class JobApplication extends AbstractAggregateRoot<JobApplication> {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -60,14 +62,14 @@ public class JobApplication {
         this.status = ApplicationStatus.OFFERED;
     }
 
-    public void addInterview(LocalDateTime startTime, Integer duration, boolean isOnline, String link) {
+    public Interview addInterview(LocalDateTime startTime, Integer duration, boolean isOnline, String link) {
 
         if(this.status != ApplicationStatus.PENDING) {
             throw new DomainException(DomainErrorCode.CANNOT_SCHEDULE_INTERVIEW);
         }
 
         // check time
-        if(startTime.isBefore(LocalDateTime.now())) {
+        if(startTime.isBefore(LocalDateTime.now().minusHours(1))) {
             throw new DomainException(DomainErrorCode.INVALID_INTERVIEW_TIME);
         }
 
@@ -89,7 +91,8 @@ public class JobApplication {
                 this
         );
         this.interviews.add(interview);
+        registerEvent(new InterviewScheduledEvent(interview, this.candidate));
+        return interview;
     }
-
 
 }

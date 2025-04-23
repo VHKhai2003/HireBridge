@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -121,6 +122,19 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.builder()
                         .status(exception.getErrorCode().getStatusCode())
                         .message(exception.getErrorCode().getDesc())
+                        .timestamp(new Date())
+                        .build());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity handleAccessDeniedException(AccessDeniedException exception, WebRequest request) {
+        log.error("AccessDeniedException handler: {}", exception.getMessage());
+        logRequestUrl(request);
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(ErrorResponse.builder()
+                        .status(403)
+                        .message("Access is denied")
                         .timestamp(new Date())
                         .build());
     }

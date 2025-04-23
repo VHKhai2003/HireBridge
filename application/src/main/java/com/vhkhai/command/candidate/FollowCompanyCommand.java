@@ -1,15 +1,13 @@
 package com.vhkhai.command.candidate;
 
 import an.awesome.pipelinr.Command;
-import com.vhkhai.aggrerates.candidate.Candidate;
-import com.vhkhai.aggrerates.company.Company;
 import com.vhkhai.exception.ApplicationErrorCode;
 import com.vhkhai.exception.ApplicationException;
-import com.vhkhai.port.UserAuthentication;
 import com.vhkhai.repositories.CandidateRepository;
 import com.vhkhai.repositories.CompanyRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +17,7 @@ import java.util.UUID;
 @Getter
 public class FollowCompanyCommand implements Command<Void> {
     private final UUID companyId;
+    private final UUID accountId;
 }
 
 
@@ -28,18 +27,16 @@ class FollowCompanyCommandHandler implements Command.Handler<FollowCompanyComman
 
     private final CandidateRepository candidateRepository;
     private final CompanyRepository companyRepository;
-    private final UserAuthentication userAuthentication;
 
     @Transactional
+    @PreAuthorize("hasRole('CANDIDATE')")
     @Override
     public Void handle(FollowCompanyCommand command) {
-        Candidate candidate = candidateRepository.findByAccountId(userAuthentication.getAuthenticatedUser().getId())
-                .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.CANDIDATE_NOT_FOUND));
-        Company company = companyRepository.getById(command.getCompanyId())
+        var company = companyRepository.getById(command.getCompanyId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));
-
+        var candidate = candidateRepository.findByAccountId(command.getAccountId())
+                .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.CANDIDATE_NOT_FOUND));
         candidate.followCompany(company);
-
         candidateRepository.update(candidate);
         return null;
     }
