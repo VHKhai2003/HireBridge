@@ -16,12 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-@RequiredArgsConstructor
-@Getter
-public class ApplyJobCommand implements Command<JobApplicationResponseDto> {
-    private final UUID accountId;
-    private final UUID companyId;
-    private final UUID jobPostingId;
+public record ApplyJobCommand(UUID accountId, UUID companyId,
+                              UUID jobPostingId) implements Command<JobApplicationResponseDto> {
 }
 
 
@@ -39,13 +35,13 @@ class ApplyJobCommandHandler implements Command.Handler<ApplyJobCommand, JobAppl
     @Override
     public JobApplicationResponseDto handle(ApplyJobCommand command) {
 
-        var candidate = candidateRepository.findByAccountId(command.getAccountId())
+        var candidate = candidateRepository.findByAccountId(command.accountId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.CANDIDATE_NOT_FOUND));
 
-        var company = companyRepository.getById(command.getCompanyId())
+        var company = companyRepository.getById(command.companyId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));
 
-        var jobPosting = company.getJobPosting(command.getJobPostingId());
+        var jobPosting = company.getJobPosting(command.jobPostingId());
         if(jobPosting == null) {
             throw new ApplicationException(ApplicationErrorCode.JOB_POSTING_NOT_FOUND);
         }

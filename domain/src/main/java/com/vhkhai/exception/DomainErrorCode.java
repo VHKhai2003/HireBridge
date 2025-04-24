@@ -23,6 +23,10 @@ public enum DomainErrorCode {
     JOB_APPLICATION_ALREADY_EXISTS(4006, "Job application already exists"),
     JOB_APPLICATION_NOT_FOUND(4007, "Job application not found"),
     CANDIDATE_HAS_NO_CV(4008, "Candidate has no CV"),
+    INTERVIEW_NOT_FOUND(4009, "Interview not found"),
+    CANNOT_UPDATE_INTERVIEW(4010, "Cannot update interview"),
+    INVALID_INTERVIEW_LINK(4011, "Invalid interview link"),
+    INVALID_INTERVIEW_DURATION(4012, "Invalid interview duration"),
     ;
 
 

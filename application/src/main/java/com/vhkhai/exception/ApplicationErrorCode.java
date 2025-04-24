@@ -15,6 +15,7 @@ public enum ApplicationErrorCode {
     EMAIL_ALREADY_EXISTS(400005, "Email already exists", 400),
     PDF_FILE_IS_REQUIRED(400006, "PDF file is required", 400),
     IMAGE_FILE_IS_REQUIRED(400007, "Image file is required", 400),
+    INVALID_INTERVIEW_STATUS(400008, "Invalid interview status", 400),
 
     CANDIDATE_NOT_FOUND(404001, "Candidate not found", 404),
     COMPANY_NOT_FOUND(404002, "Company not found", 404),
