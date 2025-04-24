@@ -30,7 +30,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public Optional<Account> getById(UUID id) {
+    public Optional<Account> findById(UUID id) {
         return accountRepositoryJpa.findById(id);
     }
 

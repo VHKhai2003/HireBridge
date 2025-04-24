@@ -27,7 +27,7 @@ class GetCandidateQueryHandler implements Query.Hanldler<GetCandidateQuery, Cand
 
     @Override
     public CandidateResponseDto handle(GetCandidateQuery query) {
-        var candidate = candidateRepository.getById(query.getCandidateId())
+        var candidate = candidateRepository.findById(query.getCandidateId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.CANDIDATE_NOT_FOUND));
         return candidateMapper.toDto(candidate);
     }

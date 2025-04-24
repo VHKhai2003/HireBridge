@@ -10,6 +10,7 @@ import com.vhkhai.dto.company.CompanyResponseDto;
 import com.vhkhai.dto.company.CompanyUpdateProfileRequestDto;
 import com.vhkhai.port.UserAuthentication;
 import com.vhkhai.query.company.GetCompanyQuery;
+import com.vhkhai.query.company.GetListCompaniesQuery;
 import com.vhkhai.utils.RestResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -26,6 +28,15 @@ public class CompanyController {
 
     private final Pipeline pipeline;
     private final UserAuthentication userAuthentication;
+
+    @GetMapping("")
+    public ResponseEntity<List<CompanyResponseDto>> getCompanies() {
+        return new RestResponse<>()
+                .withData(pipeline.send(new GetListCompaniesQuery()))
+                .withStatus(200)
+                .withMessage("Get companies successfully")
+                .buildHttpResponseEntity();
+    }
 
     @PostMapping("/create")
     public ResponseEntity<AccountResponseDto> register(@Valid @RequestBody CreateCompanyCommand command) {

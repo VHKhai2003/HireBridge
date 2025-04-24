@@ -46,8 +46,8 @@ public class Company extends AbstractAggregateRoot<Company> {
     private List<JobPosting> jobPostings;
 
 
-    public void addJobPosting(String title, String requirement) {
-        JobPosting jobPosting = new JobPosting(title, requirement, this);
+    public void addJobPosting(String title, String description) {
+        JobPosting jobPosting = new JobPosting(title, description, this);
         this.jobPostings.add(jobPosting);
         registerEvent(new JobPostingCreationEvent(jobPosting));
     }

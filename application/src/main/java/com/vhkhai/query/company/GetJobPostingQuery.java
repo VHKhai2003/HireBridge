@@ -29,7 +29,7 @@ class GetJobPostingQueryHandler implements Query.Handler<GetJobPostingQuery, Job
     @Override
     public JobPostingResponseDto handle(GetJobPostingQuery command) {
 
-        var company = companyRepository.getById(command.getCompanyId())
+        var company = companyRepository.findById(command.getCompanyId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));
 
         var jobPosting = company.getJobPosting(command.getJobPostingId());

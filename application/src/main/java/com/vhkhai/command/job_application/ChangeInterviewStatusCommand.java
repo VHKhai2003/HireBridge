@@ -30,7 +30,7 @@ class ChangeInterviewStatusCommandHandler implements Command.Handler<ChangeInter
 
         var company = companyRepository.findByAccountId(command.account().getId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));
-        var jobApplication = jobApplicationRepository.getById(command.jobApplicationId())
+        var jobApplication = jobApplicationRepository.findById(command.jobApplicationId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.JOB_APPLICATION_NOT_FOUND));
         if(!company.equals(jobApplication.getJobPosting().getCompany())) {
             throw new ApplicationException(ApplicationErrorCode.ACCESS_DENIED);

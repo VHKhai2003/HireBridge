@@ -35,7 +35,7 @@ class GetJobApplicationQueryHandler
     @Override
     public JobApplicationResponseDto handle(GetJobApplicationQuery query) {
 
-        var jobApplication = jobApplicationRepository.getById(query.getJobApplicationId())
+        var jobApplication = jobApplicationRepository.findById(query.getJobApplicationId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.JOB_APPLICATION_NOT_FOUND));
 
         if(query.getAccount().isCandidate()) {

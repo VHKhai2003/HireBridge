@@ -25,7 +25,7 @@ class GetCompanyQueryHandler implements Query.Hanldler<GetCompanyQuery, CompanyR
 
     @Override
     public CompanyResponseDto handle(GetCompanyQuery query) {
-        var company = companyRepository.getById(query.companyId())
+        var company = companyRepository.findById(query.companyId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));
         return companyMapper.toDto(company);
     }

@@ -40,7 +40,7 @@ class UpdateCandidateProfileCommandHandler implements Command.Handler<UpdateCand
     public CandidateResponseDto handle(UpdateCandidateProfileCommand command) {
         Account account = userAuthentication.getAuthenticatedUser();
 
-        Candidate candidate = candidateRepository.getById(command.getCandidateId())
+        Candidate candidate = candidateRepository.findById(command.getCandidateId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.CANDIDATE_NOT_FOUND));
 
         if (!account.equals(candidate.getAccount())) {

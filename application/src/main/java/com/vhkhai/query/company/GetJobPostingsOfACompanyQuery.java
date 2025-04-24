@@ -29,7 +29,7 @@ class GetJobPostingsOfACompanyQueryHandler implements Query.Handler<GetJobPostin
     @Override
     public List<JobPostingResponseDto> handle(GetJobPostingsOfACompanyQuery command) {
 
-        var company = companyRepository.getById(command.getCompanyId())
+        var company = companyRepository.findById(command.getCompanyId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));
 
         return company.getJobPostings().stream().map(jobPostingMapper::toDto).toList();

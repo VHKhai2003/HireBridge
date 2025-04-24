@@ -1,51 +1,50 @@
 package com.vhkhai.command.job_application;
 
 import an.awesome.pipelinr.Command;
-import com.vhkhai.aggrerates.account.Account;
 import com.vhkhai.dto.job_application.InterviewRequestDto;
+import com.vhkhai.dto.job_application.InterviewResponseDto;
 import com.vhkhai.exception.ApplicationErrorCode;
 import com.vhkhai.exception.ApplicationException;
+import com.vhkhai.mapper.InterviewMapper;
 import com.vhkhai.repositories.CompanyRepository;
 import com.vhkhai.repositories.JobApplicationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-public record UpdateInterviewCommand(Account account, UUID jobApplicationId, UUID interviewId,
-                                     InterviewRequestDto requestDto) implements Command<Void> {
+public record AddInterviewCommand(UUID accountId, UUID jobApplicationId,
+                                  InterviewRequestDto requestDto) implements Command<InterviewResponseDto> {
 }
 
 @Service
 @RequiredArgsConstructor
-class UpdateInterviewCommandHandler implements Command.Handler<UpdateInterviewCommand, Void> {
+class AddInterviewCommandHandler implements Command.Handler<AddInterviewCommand, InterviewResponseDto> {
 
     private final JobApplicationRepository jobApplicationRepository;
     private final CompanyRepository companyRepository;
+    private final InterviewMapper interviewMapper;
 
     @Override
+    @Transactional
     @PreAuthorize("hasRole('COMPANY')")
-    public Void handle(UpdateInterviewCommand command) {
-        var company = companyRepository.findByAccountId(command.account().getId())
-                .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));
-        var jobApplication = jobApplicationRepository.findById(command.jobApplicationId())
+    public InterviewResponseDto handle(AddInterviewCommand command) {
+        var jobApplication = jobApplicationRepository.getById(command.jobApplicationId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.JOB_APPLICATION_NOT_FOUND));
+        var company = companyRepository.findByAccountId(command.accountId())
+                .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));
         if(!company.equals(jobApplication.getJobPosting().getCompany())) {
             throw new ApplicationException(ApplicationErrorCode.ACCESS_DENIED);
         }
-
         var requestDto = command.requestDto();
-
-        jobApplication.updateInterview(
-                command.interviewId(),
+        var interview = jobApplication.addInterview(
                 requestDto.getStartTime(),
                 requestDto.getDuration(),
                 requestDto.isOnline(),
-                requestDto.getLink()
-        );
+                requestDto.getLink());
         jobApplicationRepository.update(jobApplication);
-
-        return null;
+        return interviewMapper.toDto(interview);
     }
 }

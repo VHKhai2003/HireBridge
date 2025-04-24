@@ -9,5 +9,5 @@ public interface BaseRepository<T, ID> {
 
     void delete(ID id);
 
-    Optional<T> getById(ID id);
+    Optional<T> findById(ID id);
 }

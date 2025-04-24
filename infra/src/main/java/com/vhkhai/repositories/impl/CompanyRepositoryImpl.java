@@ -8,6 +8,7 @@ import com.vhkhai.repositories.jpa.JobPostingRepositoryJpa;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,13 +34,18 @@ public class CompanyRepositoryImpl implements CompanyRepository {
     }
 
     @Override
-    public Optional<Company> getById(UUID uuid) {
+    public Optional<Company> findById(UUID uuid) {
         return companyRepositoryJpa.findById(uuid);
     }
 
     @Override
     public Optional<Company> findByAccountId(UUID accountId) {
         return companyRepositoryJpa.findByAccountId(accountId);
+    }
+
+    @Override
+    public List<Company> findAll() {
+        return companyRepositoryJpa.findAll();
     }
 
 }

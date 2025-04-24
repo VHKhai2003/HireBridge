@@ -41,7 +41,7 @@ public class JobPostingController {
             @PathVariable(name = "id") UUID companyId,
             @Valid @RequestBody JobPostingRequestDto requestDto) {
         return new RestResponse<>()
-                .withData(pipeline.send(new AddJobPostingCommand(companyId, requestDto.getTitle(), requestDto.getRequirement())))
+                .withData(pipeline.send(new AddJobPostingCommand(companyId, requestDto.getTitle(), requestDto.getDescription())))
                 .withStatus(200)
                 .withMessage("Add job posting successfully")
                 .buildHttpResponseEntity();

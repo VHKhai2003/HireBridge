@@ -40,7 +40,7 @@ class UploadCVCommandHandler implements Command.Handler<UploadCVCommand, String>
     public String handle(UploadCVCommand command) {
 
         var account = userAuthentication.getAuthenticatedUser();
-        var candidate = candidateRepository.getById(command.getCandidateId())
+        var candidate = candidateRepository.findById(command.getCandidateId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.CANDIDATE_NOT_FOUND));
         if (!account.equals(candidate.getAccount())) {
             throw new ApplicationException(ApplicationErrorCode.ACCESS_DENIED);

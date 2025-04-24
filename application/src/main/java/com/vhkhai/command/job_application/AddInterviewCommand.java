@@ -31,7 +31,7 @@ class AddInterviewCommandHandler implements Command.Handler<AddInterviewCommand,
     @Transactional
     @PreAuthorize("hasRole('COMPANY')")
     public InterviewResponseDto handle(AddInterviewCommand command) {
-        var jobApplication = jobApplicationRepository.getById(command.jobApplicationId())
+        var jobApplication = jobApplicationRepository.findById(command.jobApplicationId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.JOB_APPLICATION_NOT_FOUND));
         var company = companyRepository.findByAccountId(command.accountId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));

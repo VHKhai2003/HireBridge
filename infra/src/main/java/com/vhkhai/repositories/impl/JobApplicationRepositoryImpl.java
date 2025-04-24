@@ -47,7 +47,7 @@ public class JobApplicationRepositoryImpl implements JobApplicationRepository {
     }
 
     @Override
-    public Optional<JobApplication> getById(UUID uuid) {
+    public Optional<JobApplication> findById(UUID uuid) {
         return jpaRepository.findById(uuid);
     }
 }

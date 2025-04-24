@@ -37,7 +37,7 @@ public class InterviewCreationEventListener {
         var scheduledTime = Date.from(interviewStartTime.atZone(ZoneId.systemDefault()).toInstant().minusSeconds(3600));
         if(scheduledTime.before(new Date())) return;
         var task = new ScheduledTask(event.getInterview().getId(), () -> {
-            var candidate = candidateRepository.getById(event.getCandidate().getId())
+            var candidate = candidateRepository.findById(event.getCandidate().getId())
                     .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.CANDIDATE_NOT_FOUND));
             candidate.receiveNotification("Interview Upcoming", "Your interview is coming up on " + event.getInterview().getStartTime());
             candidateRepository.update(candidate);

@@ -11,6 +11,6 @@ import lombok.Setter;
 public class JobPostingRequestDto {
     @NotBlank(message = "Title is required")
     private String title;
-    @NotBlank(message = "Requirement is required")
-    private String requirement;
+    @NotBlank(message = "Description is required")
+    private String description;
 }

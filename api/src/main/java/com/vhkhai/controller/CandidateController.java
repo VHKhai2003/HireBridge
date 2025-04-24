@@ -9,10 +9,12 @@ import com.vhkhai.dto.candidate.CandidateResponseDto;
 import com.vhkhai.dto.candidate.CandidateUpdateProfileRequestDto;
 import com.vhkhai.dto.company.CompanyResponseDto;
 import com.vhkhai.dto.job_application.JobApplicationResponseDto;
+import com.vhkhai.dto.notification.NotificationResponseDto;
 import com.vhkhai.port.UserAuthentication;
 import com.vhkhai.query.candidate.GetCandidateProfileQuery;
 import com.vhkhai.query.candidate.GetCandidateQuery;
 import com.vhkhai.query.candidate.GetFollowedCompaniesQuery;
+import com.vhkhai.query.candidate.GetNotificationsQuery;
 import com.vhkhai.query.job_application.JobApplicationsOfCandidateQuery;
 import com.vhkhai.service.AccountService;
 import com.vhkhai.utils.RestResponse;
@@ -108,6 +110,15 @@ public class CandidateController {
                 .withData(pipeline.send(new GetFollowedCompaniesQuery(accountId)))
                 .withStatus(200)
                 .withMessage("Get my job applications successfully")
+                .buildHttpResponseEntity();
+    }
+
+    @GetMapping("/notifications")
+    public ResponseEntity<List<NotificationResponseDto>> getNotifications() {
+        return new RestResponse<>()
+                .withData(pipeline.send(new GetNotificationsQuery(userAuthentication.getAuthenticatedUser().getId())))
+                .withStatus(200)
+                .withMessage("Get notifications successfully")
                 .buildHttpResponseEntity();
     }
 

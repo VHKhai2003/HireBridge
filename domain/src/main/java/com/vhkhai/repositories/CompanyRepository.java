@@ -4,9 +4,11 @@ import com.vhkhai.aggrerates.company.Company;
 import com.vhkhai.aggrerates.company.JobPosting;
 import com.vhkhai.shared.BaseRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface CompanyRepository extends BaseRepository<Company, UUID> {
     Optional<Company> findByAccountId(UUID accountId);
+    List<Company> findAll();
 }

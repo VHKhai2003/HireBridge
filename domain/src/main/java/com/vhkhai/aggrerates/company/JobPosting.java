@@ -3,7 +3,9 @@ package com.vhkhai.aggrerates.company;
 import com.vhkhai.enumerations.JobPostingStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -19,7 +21,11 @@ public class JobPosting {
 
     private String title;
 
-    private String requirement;
+    private String description;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
     private JobPostingStatus status;
@@ -28,9 +34,9 @@ public class JobPosting {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    public JobPosting(String title, String requirement, Company company) {
+    public JobPosting(String title, String description, Company company) {
         this.title = title;
-        this.requirement = requirement;
+        this.description = description;
         this.status = JobPostingStatus.OPENED;
         this.company = company;
     }

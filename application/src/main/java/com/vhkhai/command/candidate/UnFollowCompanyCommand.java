@@ -27,7 +27,7 @@ class UnFollowCompanyCommandHandler implements Command.Handler<UnFollowCompanyCo
     @PreAuthorize("hasRole('CANDIDATE')")
     @Override
     public Void handle(UnFollowCompanyCommand command) {
-        var company = companyRepository.getById(command.companyId())
+        var company = companyRepository.findById(command.companyId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));
         var candidate = candidateRepository.findByAccountId(command.accountId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.CANDIDATE_NOT_FOUND));

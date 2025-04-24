@@ -35,7 +35,7 @@ public class CandidateRepositoryImpl implements CandidateRepository {
     }
 
     @Override
-    public Optional<Candidate> getById(UUID uuid) {
+    public Optional<Candidate> findById(UUID uuid) {
         return candidateRepositoryJpa.findById(uuid);
     }
 

@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-public record AddJobPostingCommand(UUID companyId, String title, String requirement) implements Command<Boolean> {
+public record AddJobPostingCommand(UUID companyId, String title, String description) implements Command<Boolean> {
 }
 
 @Service
@@ -31,7 +31,7 @@ class AddJobPostingCommandHandler implements Command.Handler<AddJobPostingComman
         if(!command.companyId().equals(company.getId())) {
             throw new ApplicationException(ApplicationErrorCode.ACCESS_DENIED);
         }
-        company.addJobPosting(command.title(), command.requirement());
+        company.addJobPosting(command.title(), command.description());
         companyRepository.update(company);
         return true;
     }

@@ -1,6 +1,5 @@
-package com.vhkhai.dto.job_posting;
+package com.vhkhai.dto.notification;
 
-import com.vhkhai.enumerations.JobPostingStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,10 +10,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class JobPostingResponseDto {
+public class NotificationResponseDto {
     private UUID id;
     private String title;
-    private String description;
-    private JobPostingStatus status;
+    private String content;
     private LocalDateTime createdAt;
 }

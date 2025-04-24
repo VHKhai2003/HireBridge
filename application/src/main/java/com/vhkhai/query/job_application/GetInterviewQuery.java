@@ -30,7 +30,7 @@ class GetInterviewQueryHandler implements Query.Hanldler<GetInterviewQuery, Inte
 
     @Override
     public InterviewResponseDto handle(GetInterviewQuery query) {
-        var jobApplication = jobApplicationRepository.getById(query.jobApplicationId())
+        var jobApplication = jobApplicationRepository.findById(query.jobApplicationId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.JOB_APPLICATION_NOT_FOUND));
         if(query.account().isCandidate()) {
             var candidate = candidateRepository.findByAccountId(query.account().getId())
