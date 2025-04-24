@@ -10,7 +10,6 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class FollowingId {
     private UUID candidateId;
     private UUID companyId;

@@ -17,7 +17,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
 @EqualsAndHashCode(of = {"id"})
 public class Candidate {
     @Id
@@ -45,14 +44,14 @@ public class Candidate {
     private List<Notification> notifications;
 
 
+    public Candidate(Account account) {
+        this.id = UUID.randomUUID();
+        this.email = account.getEmail();
+        this.account = account;
+    }
+
     public void receiveNotification(String title, String content) {
-        Notification notification = Notification.builder()
-                .createdAt(LocalDateTime.now())
-                .id(UUID.randomUUID())
-                .title(title)
-                .content(content)
-                .candidate(this)
-                .build();
+        Notification notification = new Notification(title, content, this);
         this.notifications.add(notification);
     }
 

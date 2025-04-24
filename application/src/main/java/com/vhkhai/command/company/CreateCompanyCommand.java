@@ -43,17 +43,10 @@ class CreateCompanyCommandHandler implements Command.Handler<CreateCompanyComman
             throw new ApplicationException(ApplicationErrorCode.EMAIL_ALREADY_EXISTS);
         }
         // Create a new account
-        Account savedAccount = accountRepository.create(Account.builder()
-                .email(command.getEmail())
-                .password(pwEncoder.encode(command.getPassword()))
-                .type(AccountType.COMPANY)
-                .build());
-        // Create a new company
-        companyRepository.create(Company.builder()
-                .email(savedAccount.getEmail())
-                .account(savedAccount)
-                .build());
-
+        var savedAccount = accountRepository.create(
+                new Account(command.getEmail(), pwEncoder.encode(command.getPassword()), AccountType.CANDIDATE)
+        );
+        companyRepository.create(new Company(savedAccount));
         return mapper.toAccountResponseDto(savedAccount);
     }
 }

@@ -12,7 +12,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
 public class JobPosting {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -28,4 +27,11 @@ public class JobPosting {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
+    public JobPosting(String title, String requirement, Company company) {
+        this.title = title;
+        this.requirement = requirement;
+        this.status = JobPostingStatus.OPENED;
+        this.company = company;
+    }
 }

@@ -12,7 +12,6 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @ToString
 @EqualsAndHashCode(of = {"id"})
 //TODO: don't dung builder pattern for entity, it lead to break ddd
@@ -24,6 +23,13 @@ public class Account {
     private String password;
     @Enumerated(EnumType.STRING)
     private AccountType type;
+
+    public Account(String email, String password, AccountType type) {
+        this.id = UUID.randomUUID();
+        this.email = email;
+        this.password = password;
+        this.type = type;
+    }
 
     public boolean isCompany() {
         return this.type == AccountType.COMPANY;

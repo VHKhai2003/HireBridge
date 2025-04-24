@@ -18,7 +18,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
 @EqualsAndHashCode(of = {"id"})
 public class Company extends AbstractAggregateRoot<Company> {
     @Id
@@ -33,6 +32,11 @@ public class Company extends AbstractAggregateRoot<Company> {
 
     private String address;
 
+    public Company(Account account) {
+        this.id = UUID.randomUUID();
+        this.email = account.getEmail();
+        this.account = account;
+    }
 
     @OneToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
@@ -43,7 +47,7 @@ public class Company extends AbstractAggregateRoot<Company> {
 
 
     public void addJobPosting(String title, String requirement) {
-        JobPosting jobPosting = new JobPosting(UUID.randomUUID(), title, requirement, JobPostingStatus.OPENED, this);
+        JobPosting jobPosting = new JobPosting(title, requirement, this);
         this.jobPostings.add(jobPosting);
         registerEvent(new JobPostingCreationEvent(jobPosting));
     }

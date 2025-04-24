@@ -13,7 +13,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
 @Entity
 @Table(name = "notifications")
 @DynamicInsert
@@ -34,4 +33,11 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "candidate_id")
     private Candidate candidate;
+
+    public Notification(String title, String content, Candidate candidate) {
+        this.id = UUID.randomUUID();
+        this.title = title;
+        this.content = content;
+        this.candidate = candidate;
+    }
 }

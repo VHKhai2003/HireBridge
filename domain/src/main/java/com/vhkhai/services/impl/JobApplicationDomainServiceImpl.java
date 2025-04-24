@@ -28,10 +28,6 @@ public class JobApplicationDomainServiceImpl implements JobApplicationDomainServ
             throw new DomainException(DomainErrorCode.JOB_APPLICATION_ALREADY_EXISTS);
         }
 
-        //company.ScheduleInterview(candidate, jobPosting);
-        //candidate.ScheduleInterview(jobPosting);
-        //jobPosting.ScheduleInterview(candidate);
-
         var jobApplication = new JobApplication(candidate, jobPosting);
         return jobApplicationRepository.create(jobApplication);
     }
