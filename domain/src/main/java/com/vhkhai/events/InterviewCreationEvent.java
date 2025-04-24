@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class InterviewScheduledEvent extends DomainEvent {
+public class InterviewCreationEvent extends DomainEvent {
     private Interview interview;
     private Candidate candidate;
 }

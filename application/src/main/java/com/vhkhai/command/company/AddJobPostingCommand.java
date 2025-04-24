@@ -13,12 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-@RequiredArgsConstructor
-@Getter
-public class AddJobPostingCommand implements Command<Boolean> {
-    private final UUID companyId;
-    private final String title;
-    private final String requirement;
+public record AddJobPostingCommand(UUID companyId, String title, String requirement) implements Command<Boolean> {
 }
 
 @Service
@@ -34,10 +29,10 @@ class AddJobPostingCommandHandler implements Command.Handler<AddJobPostingComman
     public Boolean handle(AddJobPostingCommand command) {
         var company = companyRepository.findByAccountId(userAuthentication.getAuthenticatedUser().getId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));
-        if(!command.getCompanyId().equals(company.getId())) {
+        if(!command.companyId().equals(company.getId())) {
             throw new ApplicationException(ApplicationErrorCode.ACCESS_DENIED);
         }
-        company.addJobPosting(command.getTitle(), command.getRequirement());
+        company.addJobPosting(command.title(), command.requirement());
         companyRepository.update(company);
         return true;
     }

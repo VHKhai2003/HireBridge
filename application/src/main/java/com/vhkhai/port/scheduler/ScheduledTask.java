@@ -1,4 +1,4 @@
-package com.vhkhai.port.schedule;
+package com.vhkhai.port.scheduler;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +12,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class ScheduledTask {
-    private UUID id;
+    private UUID key;
     private Runnable task;
 }

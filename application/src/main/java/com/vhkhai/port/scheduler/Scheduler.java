@@ -1,4 +1,4 @@
-package com.vhkhai.port.schedule;
+package com.vhkhai.port.scheduler;
 
 import java.util.Date;
 import java.util.UUID;

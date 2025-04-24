@@ -12,10 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@RequiredArgsConstructor
-@Getter
-public class GetCompanyQuery implements Query<CompanyResponseDto> {
-    private final UUID companyId;
+
+public record GetCompanyQuery(UUID companyId) implements Query<CompanyResponseDto> {
 }
 
 @Component
@@ -27,7 +25,7 @@ class GetCompanyQueryHandler implements Query.Hanldler<GetCompanyQuery, CompanyR
 
     @Override
     public CompanyResponseDto handle(GetCompanyQuery query) {
-        var company = companyRepository.getById(query.getCompanyId())
+        var company = companyRepository.getById(query.companyId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));
         return companyMapper.toDto(company);
     }

@@ -28,7 +28,8 @@ public class JobPostingCreationEventListener {
                 .toList();
 
         for (Candidate candidate : candidates) {
-            candidate.receiveNotification(company.getName() + " has posted a new job posting", event.getJobPosting().getTitle());
+            candidate.receiveNotification("New Job",
+                    String.format("%s has posted a new job: %s", company.getName(), event.getJobPosting().getTitle()));
             candidateRepository.update(candidate);
         }
 

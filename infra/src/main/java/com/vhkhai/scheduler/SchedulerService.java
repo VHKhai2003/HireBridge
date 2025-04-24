@@ -2,8 +2,8 @@ package com.vhkhai.scheduler;
 
 import com.vhkhai.exception.ErrorCode;
 import com.vhkhai.exception.InfrastructureException;
-import com.vhkhai.port.schedule.ScheduledTask;
-import com.vhkhai.port.schedule.Scheduler;
+import com.vhkhai.port.scheduler.ScheduledTask;
+import com.vhkhai.port.scheduler.Scheduler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -27,12 +27,12 @@ public class SchedulerService implements Scheduler {
         if(startTime.before(new Date())){ // startTime < now
             throw new InfrastructureException(ErrorCode.INVALID_START_TIME_FOR_SCHEDULED_TASK);
         }
-        if(scheduledTasks.containsKey(scheduledTask.getId())){ // already scheduled
+        if(scheduledTasks.containsKey(scheduledTask.getKey())){ // already scheduled
             throw new InfrastructureException(ErrorCode.SCHEDULED_TASK_ALREADY_EXISTS);
         }
 
         ScheduledFuture<?> future = scheduler.schedule(scheduledTask.getTask(), startTime);
-        scheduledTasks.put(scheduledTask.getId(), future);
+        scheduledTasks.put(scheduledTask.getKey(), future);
     }
 
     @Override

@@ -80,10 +80,10 @@ public class Candidate {
 
     public void updateProfile(String fullName, String phone) {
 
-        if (checkFullName(fullName) == false) {
+        if (!checkFullName(fullName)) {
             throw new DomainException(DomainErrorCode.INVALID_FULLNAME);
         }
-        if (checkPhone(phone) == false) {
+        if (!checkPhone(phone)) {
             throw new DomainException(DomainErrorCode.INVALID_PHONE);
         }
 

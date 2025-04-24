@@ -1,14 +1,12 @@
 package com.vhkhai.controller;
 
 import an.awesome.pipelinr.Pipeline;
-import com.vhkhai.command.candidate.FollowCompanyCommand;
 import com.vhkhai.command.candidate.RegisterCandidateCommand;
 import com.vhkhai.command.candidate.UpdateCandidateProfileCommand;
 import com.vhkhai.command.candidate.UploadCVCommand;
 import com.vhkhai.dto.account.AccountResponseDto;
 import com.vhkhai.dto.candidate.CandidateResponseDto;
 import com.vhkhai.dto.candidate.CandidateUpdateProfileRequestDto;
-import com.vhkhai.dto.candidate.FollowCompanyRequestDto;
 import com.vhkhai.dto.company.CompanyResponseDto;
 import com.vhkhai.dto.job_application.JobApplicationResponseDto;
 import com.vhkhai.port.UserAuthentication;

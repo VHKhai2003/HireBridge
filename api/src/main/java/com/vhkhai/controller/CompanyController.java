@@ -2,6 +2,7 @@ package com.vhkhai.controller;
 
 import an.awesome.pipelinr.Pipeline;
 import com.vhkhai.command.candidate.FollowCompanyCommand;
+import com.vhkhai.command.candidate.UnFollowCompanyCommand;
 import com.vhkhai.command.company.CreateCompanyCommand;
 import com.vhkhai.command.company.UpdateCompanyProfileCommand;
 import com.vhkhai.dto.account.AccountResponseDto;
@@ -62,6 +63,16 @@ public class CompanyController {
                 .withData(pipeline.send(new FollowCompanyCommand(companyId, accountId)))
                 .withStatus(200)
                 .withMessage("Follow company successfully")
+                .buildHttpResponseEntity();
+    }
+
+    @PostMapping("/{id}/unfollow")
+    public ResponseEntity<CompanyResponseDto> unfollowCompany(@PathVariable(name = "id" ) UUID companyId) {
+        UUID accountId = userAuthentication.getAuthenticatedUser().getId();
+        return new RestResponse<>()
+                .withData(pipeline.send(new UnFollowCompanyCommand(companyId, accountId)))
+                .withStatus(200)
+                .withMessage("Unfollow company successfully")
                 .buildHttpResponseEntity();
     }
 

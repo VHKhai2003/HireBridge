@@ -4,7 +4,7 @@ import com.vhkhai.aggrerates.candidate.Candidate;
 import com.vhkhai.aggrerates.company.JobPosting;
 import com.vhkhai.enumerations.ApplicationStatus;
 import com.vhkhai.enumerations.InterviewStatus;
-import com.vhkhai.events.InterviewScheduledEvent;
+import com.vhkhai.events.InterviewCreationEvent;
 import com.vhkhai.exception.DomainErrorCode;
 import com.vhkhai.exception.DomainException;
 import jakarta.persistence.*;
@@ -69,7 +69,7 @@ public class JobApplication extends AbstractAggregateRoot<JobApplication> {
         }
 
         // check time
-        if(startTime.isBefore(LocalDateTime.now().minusHours(1))) {
+        if(startTime.isBefore(LocalDateTime.now())) {
             throw new DomainException(DomainErrorCode.INVALID_INTERVIEW_TIME);
         }
 
@@ -91,7 +91,7 @@ public class JobApplication extends AbstractAggregateRoot<JobApplication> {
                 this
         );
         this.interviews.add(interview);
-        registerEvent(new InterviewScheduledEvent(interview, this.candidate));
+        registerEvent(new InterviewCreationEvent(interview, this.candidate));
         return interview;
     }
 

@@ -1,17 +1,11 @@
 package com.vhkhai.events;
 
-import com.vhkhai.aggrerates.candidate.Candidate;
-import com.vhkhai.port.schedule.ScheduledTask;
 import com.vhkhai.repositories.CandidateRepository;
-import com.vhkhai.utils.InterviewUpcomingNotification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
-
-import java.time.Instant;
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +14,7 @@ public class ScheduleEventListener {
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void handle(InterviewScheduledEvent event) {
+    public void handle(InterviewCreationEvent event) {
 // schedule the interview
 //        Date startTime = Date.from(Instant.from(event.getStartTime()).plusSeconds(3600));
 //        ScheduledTask task = ScheduledTask.builder()

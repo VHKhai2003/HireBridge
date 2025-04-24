@@ -6,6 +6,7 @@ import com.vhkhai.enumerations.ApplicationStatus;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class JobApplicationResponseDto {
+    private UUID id;
     private CandidateResponseDto candidate;
     private JobPostingResponseDto jobPosting;
     private ApplicationStatus status;
