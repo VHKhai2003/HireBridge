@@ -1,17 +1,13 @@
 package com.vhkhai.controller;
 
 import an.awesome.pipelinr.Pipeline;
-import com.vhkhai.command.job_application.AddInterviewCommand;
-import com.vhkhai.command.job_application.ChangeInterviewStatusCommand;
-import com.vhkhai.command.job_application.UpdateInterviewCommand;
-import com.vhkhai.dto.job_application.ChangeInterviewStatusRequestDto;
-import com.vhkhai.dto.job_application.InterviewRequestDto;
-import com.vhkhai.dto.job_application.InterviewResponseDto;
-import com.vhkhai.dto.job_application.JobApplicationResponseDto;
+import com.vhkhai.command.job_application.*;
+import com.vhkhai.dto.job_application.*;
 import com.vhkhai.port.UserAuthentication;
 import com.vhkhai.query.job_application.GetInterviewQuery;
 import com.vhkhai.query.job_application.GetJobApplicationQuery;
 import com.vhkhai.utils.RestResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -85,6 +81,26 @@ public class JobApplicationController {
         return new RestResponse<>()
                 .withStatus(200)
                 .withMessage("Change interview status successfully")
+                .buildHttpResponseEntity();
+    }
+
+    @PostMapping("/offer")
+    public ResponseEntity offer(@PathVariable UUID id) {
+        pipeline.send(new JobOfferCommand(id, userAuthentication.getAuthenticatedUser().getId()));
+        return new RestResponse<>()
+                .withStatus(200)
+                .withMessage("Offer job application successfully")
+                .buildHttpResponseEntity();
+    }
+
+    @PostMapping("/reject")
+    public ResponseEntity reject(
+            @PathVariable UUID id,
+            @Valid @RequestBody RejectJobApplicationRequestDto requestDto) {
+        pipeline.send(new JobRejectCommand(id, userAuthentication.getAuthenticatedUser().getId(), requestDto.getReason()));
+        return new RestResponse<>()
+                .withStatus(200)
+                .withMessage("Reject job application successfully")
                 .buildHttpResponseEntity();
     }
 

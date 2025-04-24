@@ -27,6 +27,10 @@ public enum DomainErrorCode {
     CANNOT_UPDATE_INTERVIEW(4010, "Cannot update interview"),
     INVALID_INTERVIEW_LINK(4011, "Invalid interview link"),
     INVALID_INTERVIEW_DURATION(4012, "Invalid interview duration"),
+    REJECT_REASON_IS_REQUIRED(4013, "Reject reason is required"),
+    CANNOT_REJECT_WHEN_HAVING_INTERVIEW(4014, "Cannot reject when having interview"),
+    CANNOT_OFFER_WHEN_HAVING_INTERVIEW(4015, "Cannot offer when having interview"),
+    JOB_APPLICATION_OFFERED_OR_REJECTED(4016, "Job application has been offered or rejected"),
     ;
 
 

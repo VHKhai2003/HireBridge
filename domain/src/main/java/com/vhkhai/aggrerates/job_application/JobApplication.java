@@ -6,6 +6,8 @@ import com.vhkhai.enumerations.ApplicationStatus;
 import com.vhkhai.enumerations.InterviewStatus;
 import com.vhkhai.events.InterviewCreationEvent;
 import com.vhkhai.events.InterviewReScheduleEvent;
+import com.vhkhai.events.JobOfferEvent;
+import com.vhkhai.events.JobRejectEvent;
 import com.vhkhai.exception.DomainErrorCode;
 import com.vhkhai.exception.DomainException;
 import jakarta.persistence.*;
@@ -31,6 +33,9 @@ public class JobApplication extends AbstractAggregateRoot<JobApplication> {
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
 
+    @Column(name = "reject_reason")
+    private String rejectReason;
+
     @ManyToOne
     @JoinColumn(name = "candidate_id")
     private Candidate candidate;
@@ -51,14 +56,36 @@ public class JobApplication extends AbstractAggregateRoot<JobApplication> {
     }
 
 
-    public void reject() {
-        if(this.status == ApplicationStatus.OFFERED || this.status == ApplicationStatus.REJECTED) return;
+    public void reject(String reason) {
+        if(hasInterview()) {
+            throw new DomainException(DomainErrorCode.CANNOT_REJECT_WHEN_HAVING_INTERVIEW);
+        }
+        if(reason.isBlank()) {
+            throw new DomainException(DomainErrorCode.REJECT_REASON_IS_REQUIRED);
+        }
+        if(this.status == ApplicationStatus.OFFERED || this.status == ApplicationStatus.REJECTED){
+            throw new DomainException(DomainErrorCode.JOB_APPLICATION_OFFERED_OR_REJECTED);
+        }
         this.status = ApplicationStatus.REJECTED;
+        this.rejectReason = reason;
+        registerEvent(new JobRejectEvent(this));
     }
 
     public void offer() {
-        if(this.status == ApplicationStatus.OFFERED || this.status == ApplicationStatus.REJECTED) return;
+        if(hasInterview()) {
+            throw new DomainException(DomainErrorCode.CANNOT_OFFER_WHEN_HAVING_INTERVIEW);
+        }
+        if(this.status == ApplicationStatus.OFFERED || this.status == ApplicationStatus.REJECTED){
+            throw new DomainException(DomainErrorCode.JOB_APPLICATION_OFFERED_OR_REJECTED);
+        }
         this.status = ApplicationStatus.OFFERED;
+        registerEvent(new JobOfferEvent(this));
+    }
+
+    private boolean hasInterview() {
+        return interviews.stream()
+                .anyMatch(interview -> interview.getStatus() != InterviewStatus.COMPLETED
+                        && interview.getStatus() != InterviewStatus.CANCELLED);
     }
 
     public Interview addInterview(LocalDateTime startTime, Integer duration, boolean isOnline, String link) {
