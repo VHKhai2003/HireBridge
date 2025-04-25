@@ -3,7 +3,7 @@ package com.vhkhai.controller;
 import an.awesome.pipelinr.Pipeline;
 import com.vhkhai.command.job_application.*;
 import com.vhkhai.dto.job_application.*;
-import com.vhkhai.port.UserAuthentication;
+import com.vhkhai.port.auth.UserAuthentication;
 import com.vhkhai.query.job_application.GetInterviewQuery;
 import com.vhkhai.query.job_application.GetJobApplicationQuery;
 import com.vhkhai.utils.RestResponse;

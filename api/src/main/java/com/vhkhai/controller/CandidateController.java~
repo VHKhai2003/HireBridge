@@ -10,7 +10,7 @@ import com.vhkhai.dto.candidate.CandidateUpdateProfileRequestDto;
 import com.vhkhai.dto.company.CompanyResponseDto;
 import com.vhkhai.dto.job_application.JobApplicationResponseDto;
 import com.vhkhai.dto.notification.NotificationResponseDto;
-import com.vhkhai.port.auth.UserAuthentication;
+import com.vhkhai.port.UserAuthentication;
 import com.vhkhai.query.candidate.GetCandidateProfileQuery;
 import com.vhkhai.query.candidate.GetCandidateQuery;
 import com.vhkhai.query.candidate.GetFollowedCompaniesQuery;

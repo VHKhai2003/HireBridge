@@ -1,7 +1,7 @@
 package com.vhkhai.dto.company;
 
 import lombok.*;
-
+import java.io.Serializable;
 import java.util.UUID;
 
 @Getter
@@ -9,7 +9,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CompanyResponseDto {
+public class CompanyResponseDto implements Serializable {
     private UUID id;
     private String name;
     private String email;

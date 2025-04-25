@@ -1,4 +1,4 @@
-package com.vhkhai.port;
+package com.vhkhai.port.auth;
 
 public interface PwEncoder {
     String encode(String rawPassword);

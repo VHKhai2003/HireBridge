@@ -1,6 +1,6 @@
 package com.vhkhai.security.encoder;
 
-import com.vhkhai.port.PwEncoder;
+import com.vhkhai.port.auth.PwEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

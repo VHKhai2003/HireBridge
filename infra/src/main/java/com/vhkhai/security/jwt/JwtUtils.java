@@ -1,8 +1,6 @@
 package com.vhkhai.security.jwt;
 
-import com.vhkhai.aggrerates.account.Account;
-import com.vhkhai.enumerations.AccountType;
-import com.vhkhai.port.Jwt;
+import com.vhkhai.port.auth.Jwt;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,8 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Component

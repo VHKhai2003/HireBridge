@@ -8,7 +8,7 @@ import com.vhkhai.command.company.UpdateCompanyProfileCommand;
 import com.vhkhai.dto.account.AccountResponseDto;
 import com.vhkhai.dto.company.CompanyResponseDto;
 import com.vhkhai.dto.company.CompanyUpdateProfileRequestDto;
-import com.vhkhai.port.auth.UserAuthentication;
+import com.vhkhai.port.UserAuthentication;
 import com.vhkhai.query.company.GetCompanyQuery;
 import com.vhkhai.query.company.GetListCompaniesQuery;
 import com.vhkhai.utils.RestResponse;

@@ -1,6 +1,4 @@
-package com.vhkhai.port;
-
-import com.vhkhai.aggrerates.account.Account;
+package com.vhkhai.port.auth;
 
 import java.util.UUID;
 

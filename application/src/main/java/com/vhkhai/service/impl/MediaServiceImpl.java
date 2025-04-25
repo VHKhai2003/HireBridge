@@ -1,6 +1,6 @@
 package com.vhkhai.service.impl;
 
-import com.vhkhai.port.Uploader;
+import com.vhkhai.port.file.Uploader;
 import com.vhkhai.service.MediaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

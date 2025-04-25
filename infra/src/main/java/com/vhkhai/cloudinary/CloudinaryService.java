@@ -4,7 +4,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.vhkhai.exception.InfrastructureException;
 import com.vhkhai.exception.ErrorCode;
-import com.vhkhai.port.Uploader;
+import com.vhkhai.port.file.Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

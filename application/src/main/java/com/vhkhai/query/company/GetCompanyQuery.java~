@@ -28,7 +28,7 @@ class GetCompanyQueryHandler implements Query.Hanldler<GetCompanyQuery, CompanyR
     @Override
     @Cacheable(value = "company", key = "#query.companyId")
     public CompanyResponseDto handle(GetCompanyQuery query) {
-        log.info("Get company from database");
+        log.info("Get company form database");
         var company = companyRepository.findById(query.companyId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));
         return companyMapper.toDto(company);

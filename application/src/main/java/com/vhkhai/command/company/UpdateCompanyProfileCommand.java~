@@ -35,7 +35,7 @@ class UpdateCompanyProfileCommandHandler implements Command.Handler<UpdateCompan
     @Override
     @Transactional
     @PreAuthorize("hasRole('COMPANY')")
-    @CacheEvict(value = "company", key = "'all'")
+    @CacheEvict(value = "company", key = "all")
     @CachePut(value = "company", key = "#command.companyId")
     public CompanyResponseDto handle(UpdateCompanyProfileCommand command) {
 

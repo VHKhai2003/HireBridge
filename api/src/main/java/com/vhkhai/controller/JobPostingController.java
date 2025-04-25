@@ -6,7 +6,7 @@ import com.vhkhai.command.job_application.ApplyJobCommand;
 import com.vhkhai.dto.job_application.JobApplicationResponseDto;
 import com.vhkhai.dto.job_posting.JobPostingRequestDto;
 import com.vhkhai.dto.job_posting.JobPostingResponseDto;
-import com.vhkhai.port.UserAuthentication;
+import com.vhkhai.port.auth.UserAuthentication;
 import com.vhkhai.query.company.GetJobPostingQuery;
 import com.vhkhai.query.company.GetJobPostingsOfACompanyQuery;
 import com.vhkhai.query.job_application.JobApplicationsOfAJobQuery;

@@ -3,7 +3,7 @@ package com.vhkhai.command.company;
 import an.awesome.pipelinr.Command;
 import com.vhkhai.exception.ApplicationErrorCode;
 import com.vhkhai.exception.ApplicationException;
-import com.vhkhai.port.UserAuthentication;
+import com.vhkhai.port.auth.UserAuthentication;
 import com.vhkhai.repositories.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;

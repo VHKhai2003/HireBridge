@@ -8,7 +8,7 @@ import com.vhkhai.dto.candidate.CandidateUpdateProfileRequestDto;
 import com.vhkhai.exception.ApplicationErrorCode;
 import com.vhkhai.exception.ApplicationException;
 import com.vhkhai.mapper.CandidateMapper;
-import com.vhkhai.port.UserAuthentication;
+import com.vhkhai.port.auth.UserAuthentication;
 import com.vhkhai.repositories.CandidateRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
