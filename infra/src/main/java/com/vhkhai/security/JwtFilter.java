@@ -1,8 +1,10 @@
 package com.vhkhai.security;
 
 import com.vhkhai.aggrerates.account.Account;
+import com.vhkhai.port.cache.CachingConstant;
+import com.vhkhai.port.cache.CachingService;
 import com.vhkhai.security.jwt.JwtUtils;
-import com.vhkhai.service.AccountService;
+import com.vhkhai.service.AuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +29,8 @@ import java.util.UUID;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
-    private final AccountService accountService;
+    private final AuthService authService;
+    private final CachingService cachingService;
 
 
     @Override
@@ -36,9 +39,10 @@ public class JwtFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-            if (jwtUtils.validateToken(token)) {
+            if (jwtUtils.isAccessToken(token) &&
+                    !cachingService.hasKey(CachingConstant.BLACKLIST_ACCESS_TOKEN.name() + "::" + token)) {
                 UUID accountId = jwtUtils.getAccountIdFromToken(token);
-                Account account = accountService.getAccountById(accountId);
+                Account account = authService.getAccountById(accountId);
                 if (account != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     List<GrantedAuthority> authorities = List.of(
                             new SimpleGrantedAuthority("ROLE_" + account.getType().name()));
@@ -52,7 +56,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
             }
             else {
-                log.error("Invalid token");
+                log.error("Invalid access token");
             }
         }
         filterChain.doFilter(request, response);

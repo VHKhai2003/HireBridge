@@ -52,7 +52,7 @@ class CreateCompanyCommandHandler implements Command.Handler<CreateCompanyComman
         }
         // Create a new account
         var savedAccount = accountRepository.create(
-                new Account(command.getEmail(), pwEncoder.encode(command.getPassword()), AccountType.CANDIDATE)
+                new Account(command.getEmail(), pwEncoder.encode(command.getPassword()), AccountType.COMPANY)
         );
         companyRepository.create(new Company(savedAccount));
         return mapper.toAccountResponseDto(savedAccount);

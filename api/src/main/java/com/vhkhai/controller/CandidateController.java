@@ -16,7 +16,7 @@ import com.vhkhai.query.candidate.GetCandidateQuery;
 import com.vhkhai.query.candidate.GetFollowedCompaniesQuery;
 import com.vhkhai.query.candidate.GetNotificationsQuery;
 import com.vhkhai.query.job_application.JobApplicationsOfCandidateQuery;
-import com.vhkhai.service.AccountService;
+import com.vhkhai.service.AuthService;
 import com.vhkhai.utils.RestResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -35,12 +35,12 @@ import java.util.UUID;
 public class CandidateController {
     private final Pipeline pipeline;
     private final UserAuthentication userAuthentication;
-    private final AccountService accountService;
+    private final AuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<AccountResponseDto> register(@Valid @RequestBody RegisterCandidateCommand command) {
         AccountResponseDto accountResponseDto = pipeline.send(command);
-        accountResponseDto.setToken(accountService.generateToken(accountResponseDto.getId()));
+        accountResponseDto.setToken(authService.generateToken(accountResponseDto.getId()));
         return new RestResponse<AccountResponseDto>()
                 .withData(accountResponseDto)
                 .withStatus(HttpStatus.CREATED.value())

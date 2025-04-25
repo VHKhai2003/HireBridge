@@ -1,0 +1,4 @@
+package com.vhkhai.dto.token;
+
+public class TokenRequestDto {
+}

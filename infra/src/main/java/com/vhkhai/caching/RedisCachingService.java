@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 @RequiredArgsConstructor
 public class RedisCachingService implements CachingService {
@@ -35,7 +37,7 @@ public class RedisCachingService implements CachingService {
 
     @Override
     public void set(String key, Object value, long expirationTime) {
-        redisTemplate.opsForValue().set(key, value, expirationTime);
+        redisTemplate.opsForValue().set(key, value, expirationTime, TimeUnit.MILLISECONDS);
     }
 
     @Override

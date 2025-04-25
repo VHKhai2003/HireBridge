@@ -11,6 +11,7 @@ import com.vhkhai.dto.company.CompanyUpdateProfileRequestDto;
 import com.vhkhai.port.auth.UserAuthentication;
 import com.vhkhai.query.company.GetCompanyQuery;
 import com.vhkhai.query.company.GetListCompaniesQuery;
+import com.vhkhai.service.AuthService;
 import com.vhkhai.utils.RestResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class CompanyController {
 
     private final Pipeline pipeline;
     private final UserAuthentication userAuthentication;
+    private final AuthService authService;
 
     @GetMapping("")
     public ResponseEntity<List<CompanyResponseDto>> getCompanies() {
@@ -40,8 +42,10 @@ public class CompanyController {
 
     @PostMapping("/create")
     public ResponseEntity<AccountResponseDto> register(@Valid @RequestBody CreateCompanyCommand command) {
+        AccountResponseDto accountResponseDto = pipeline.send(command);
+        accountResponseDto.setToken(authService.generateToken(accountResponseDto.getId()));
         return new RestResponse<>()
-                .withData(pipeline.send(command))
+                .withData(accountResponseDto)
                 .withStatus(HttpStatus.CREATED.value())
                 .withMessage("Account created successfully")
                 .buildHttpResponseEntity();
