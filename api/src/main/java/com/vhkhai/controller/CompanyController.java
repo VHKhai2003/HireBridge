@@ -12,8 +12,11 @@ import com.vhkhai.port.auth.UserAuthentication;
 import com.vhkhai.query.company.GetCompanyQuery;
 import com.vhkhai.query.company.GetListCompaniesQuery;
 import com.vhkhai.service.AuthService;
+import com.vhkhai.utils.PaginationData;
 import com.vhkhai.utils.RestResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +35,14 @@ public class CompanyController {
     private final AuthService authService;
 
     @GetMapping("")
-    public ResponseEntity<List<CompanyResponseDto>> getCompanies() {
+    public ResponseEntity<List<CompanyResponseDto>> getCompanies(
+            @RequestParam(required = false) String keyword,
+            @Min(1) @RequestParam(defaultValue = "1") int page,
+            @Min(1) @Max(50) @RequestParam(defaultValue = "10") int size) {
+        var pageData = pipeline.send(new GetListCompaniesQuery(keyword, page, size));
         return new RestResponse<>()
-                .withData(pipeline.send(new GetListCompaniesQuery()))
+                .withData(pageData.getContent())
+                .withPaginationData(PaginationData.fromPage(pageData))
                 .withStatus(200)
                 .withMessage("Get companies successfully")
                 .buildHttpResponseEntity();

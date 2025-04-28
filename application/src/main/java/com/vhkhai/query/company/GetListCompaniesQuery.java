@@ -6,25 +6,27 @@ import com.vhkhai.query.iquery.Query;
 import com.vhkhai.repositories.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-public class GetListCompaniesQuery implements Query<List<CompanyResponseDto>> {
+public record GetListCompaniesQuery(String keyword, int page, int size) implements Query<Page<CompanyResponseDto>> {
 }
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-class GetListCompaniesQueryHandler implements Query.Hanldler<GetListCompaniesQuery, List<CompanyResponseDto>> {
+class GetListCompaniesQueryHandler implements Query.Hanldler<GetListCompaniesQuery, Page<CompanyResponseDto>> {
 
     private final CompanyRepository companyRepository;
     private final CompanyMapper companyMapper;
 
     @Override
-    @Cacheable(value = "company", key = "'all'")
-    public List<CompanyResponseDto> handle(GetListCompaniesQuery command) {
-        return companyRepository.findAll().stream().map(companyMapper::toDto).toList();
+    public Page<CompanyResponseDto> handle(GetListCompaniesQuery query) {
+        var pageable = PageRequest.of(query.page() - 1, query.size());
+        if (query.keyword() != null && !query.keyword().isBlank()) {
+            return companyRepository.findByNameContaining(query.keyword(), pageable).map(companyMapper::toDto);
+        }
+        return companyRepository.findAll(pageable).map(companyMapper::toDto);
     }
 }

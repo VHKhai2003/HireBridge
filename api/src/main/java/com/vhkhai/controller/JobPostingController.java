@@ -8,12 +8,18 @@ import com.vhkhai.dto.job_application.JobApplicationResponseDto;
 import com.vhkhai.dto.job_posting.ChangeStatusJobPostingRequestDto;
 import com.vhkhai.dto.job_posting.JobPostingRequestDto;
 import com.vhkhai.dto.job_posting.JobPostingResponseDto;
+import com.vhkhai.enumerations.JobField;
+import com.vhkhai.enumerations.JobLevel;
 import com.vhkhai.port.auth.UserAuthentication;
 import com.vhkhai.query.company.GetJobPostingQuery;
 import com.vhkhai.query.company.GetJobPostingsOfACompanyQuery;
+import com.vhkhai.query.company.SearchJobPostingQuery;
 import com.vhkhai.query.job_application.JobApplicationsOfAJobQuery;
+import com.vhkhai.utils.PaginationData;
 import com.vhkhai.utils.RestResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +29,28 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/companies/{id}")
 public class JobPostingController {
 
     private final Pipeline pipeline;
     private final UserAuthentication userAuthentication;
 
     @GetMapping("/job-postings")
+    public ResponseEntity<List<JobPostingResponseDto>> searchJobPosting(
+            @RequestParam(required = false) JobField field,
+            @RequestParam(required = false) JobLevel level,
+            @Min(1) @RequestParam(defaultValue = "1") int page,
+            @Min(1) @Max(50) @RequestParam(defaultValue = "10") int size) {
+        var pageData = pipeline.send(new SearchJobPostingQuery(field, level, page, size));
+        return new RestResponse<>()
+                .withData(pageData.getContent())
+                .withPaginationData(PaginationData.fromPage(pageData))
+                .withStatus(200)
+                .withMessage("Get job postings successfully")
+                .buildHttpResponseEntity();
+
+    }
+
+    @GetMapping("/companies/{id}/job-postings")
     public ResponseEntity<List<JobPostingResponseDto>> getJobPostings(@PathVariable(name = "id") UUID companyId) {
         return new RestResponse<>()
                 .withData(pipeline.send(new GetJobPostingsOfACompanyQuery(companyId)))
@@ -38,7 +59,7 @@ public class JobPostingController {
                 .buildHttpResponseEntity();
     }
 
-    @PostMapping("/job-postings")
+    @PostMapping("/companies/{id}/job-postings")
     public ResponseEntity<Boolean> addJobPosting(
             @PathVariable(name = "id") UUID companyId,
             @Valid @RequestBody JobPostingRequestDto requestDto) {
@@ -51,7 +72,7 @@ public class JobPostingController {
                 .buildHttpResponseEntity();
     }
 
-    @GetMapping("/job-postings/{jobId}")
+    @GetMapping("/companies/{id}/job-postings/{jobId}")
     public ResponseEntity<JobPostingResponseDto> getJobPosting(
             @PathVariable(name = "id") UUID companyId,
             @PathVariable UUID jobId) {
@@ -62,7 +83,7 @@ public class JobPostingController {
                 .buildHttpResponseEntity();
     }
 
-    @PatchMapping("/job-postings/{jobId}/status")
+    @PatchMapping("/companies/{id}/job-postings/{jobId}/status")
     public ResponseEntity<Boolean> updateJobPostingStatus(
             @PathVariable(name = "id") UUID companyId,
             @PathVariable UUID jobId,
@@ -77,7 +98,7 @@ public class JobPostingController {
                 .buildHttpResponseEntity();
     }
 
-    @PostMapping("/job-postings/{jobId}/apply")
+    @PostMapping("/companies/{id}/job-postings/{jobId}/apply")
     public ResponseEntity<JobApplicationResponseDto> applyJobPosting(
             @PathVariable(name = "id") UUID companyId,
             @PathVariable UUID jobId) {
@@ -89,7 +110,7 @@ public class JobPostingController {
                 .buildHttpResponseEntity();
     }
 
-    @GetMapping("/job-postings/{jobId}/job-applications")
+    @GetMapping("/companies/{id}/job-postings/{jobId}/job-applications")
     public ResponseEntity<List<JobPostingResponseDto>> getJobApplicationsOfAJob(
             @PathVariable(name = "id") UUID companyId,
             @PathVariable UUID jobId) {

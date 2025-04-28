@@ -6,17 +6,13 @@ import com.vhkhai.exception.ApplicationException;
 import com.vhkhai.mapper.JobPostingMapper;
 import com.vhkhai.query.iquery.Query;
 import com.vhkhai.repositories.CompanyRepository;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
-@Getter
-@RequiredArgsConstructor
-public class GetJobPostingsOfACompanyQuery implements Query<List<JobPostingResponseDto>> {
-    private final UUID companyId;
+public record GetJobPostingsOfACompanyQuery(UUID companyId) implements Query<List<JobPostingResponseDto>> {
 }
 
 @Service
@@ -28,10 +24,8 @@ class GetJobPostingsOfACompanyQueryHandler implements Query.Handler<GetJobPostin
 
     @Override
     public List<JobPostingResponseDto> handle(GetJobPostingsOfACompanyQuery command) {
-
-        var company = companyRepository.findById(command.getCompanyId())
+        var company = companyRepository.findById(command.companyId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));
-
         return company.getJobPostings().stream().map(jobPostingMapper::toDto).toList();
     }
 }

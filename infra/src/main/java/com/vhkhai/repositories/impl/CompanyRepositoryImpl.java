@@ -2,10 +2,14 @@ package com.vhkhai.repositories.impl;
 
 import com.vhkhai.aggrerates.company.Company;
 import com.vhkhai.aggrerates.company.JobPosting;
+import com.vhkhai.enumerations.JobField;
+import com.vhkhai.enumerations.JobLevel;
 import com.vhkhai.repositories.CompanyRepository;
 import com.vhkhai.repositories.jpa.CompanyRepositoryJpa;
 import com.vhkhai.repositories.jpa.JobPostingRepositoryJpa;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -44,8 +48,20 @@ public class CompanyRepositoryImpl implements CompanyRepository {
     }
 
     @Override
-    public List<Company> findAll() {
-        return companyRepositoryJpa.findAll();
+    public Page<Company> findAll(Pageable pageable) {
+        return companyRepositoryJpa.findAll(pageable);
+    }
+
+    @Override
+    public Page<Company> findByNameContaining(String name, Pageable pageable) {
+        return companyRepositoryJpa.findByNameContainingIgnoreCase(name, pageable);
+    }
+
+
+    @Override
+    public Page<JobPosting> findJobPostingsByFieldAndLevelWithPagination(
+            JobField field, JobLevel level, Pageable pageable) {
+        return companyRepositoryJpa.findJobPostingsByFieldAndLevel(field, level, pageable);
     }
 
 }

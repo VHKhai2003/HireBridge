@@ -35,7 +35,6 @@ class UpdateCompanyInfoCommandHandler implements Command.Handler<UpdateCompanyIn
     @Override
     @Transactional
     @PreAuthorize("hasRole('COMPANY')")
-    @CacheEvict(value = "company", key = "'all'")
     @CachePut(value = "company", key = "#command.companyId")
     public CompanyResponseDto handle(UpdateCompanyInfoCommand command) {
 

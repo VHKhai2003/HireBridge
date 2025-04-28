@@ -44,7 +44,6 @@ class CreateCompanyCommandHandler implements Command.Handler<CreateCompanyComman
 
     @Override
     @Transactional
-    @CacheEvict(value = "company", key = "'all'")
     public AccountResponseDto handle(CreateCompanyCommand command) {
         // Check if the email already exists
         if (accountRepository.existsByEmail(command.getEmail())) {

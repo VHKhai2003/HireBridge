@@ -7,6 +7,7 @@ import com.vhkhai.exception.ApplicationErrorCode;
 import com.vhkhai.exception.ApplicationException;
 import com.vhkhai.repositories.CompanyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ class UpdateJobPostingStatusCommandHandler implements Command.Handler<UpdateJobP
 
     @Transactional
     @PreAuthorize("hasRole('COMPANY')")
+    @CacheEvict(value = "jobPosting", key = "#command.jobPostingId")
     @Override
     public Void handle(UpdateJobPostingStatusCommand command) {
         var company = companyRepository.findById(command.companyId())
