@@ -3,6 +3,7 @@ package com.vhkhai.services.impl;
 import com.vhkhai.aggrerates.candidate.Candidate;
 import com.vhkhai.aggrerates.company.JobPosting;
 import com.vhkhai.aggrerates.job_application.JobApplication;
+import com.vhkhai.enumerations.JobPostingStatus;
 import com.vhkhai.exception.DomainErrorCode;
 import com.vhkhai.exception.DomainException;
 import com.vhkhai.repositories.JobApplicationRepository;
@@ -26,6 +27,10 @@ public class JobApplicationDomainServiceImpl implements JobApplicationDomainServ
         // check if the job application already exists
         if(jobApplicationRepository.existsByCandidateIdAndJobPostingId(candidate.getId(), jobPosting.getId())) {
             throw new DomainException(DomainErrorCode.JOB_APPLICATION_ALREADY_EXISTS);
+        }
+
+        if(jobPosting.getStatus() == JobPostingStatus.CLOSED) {
+            throw new DomainException(DomainErrorCode.CANNOT_APPLY_WHEN_JOB_POSTING_CLOSED);
         }
 
         var jobApplication = new JobApplication(candidate, jobPosting);

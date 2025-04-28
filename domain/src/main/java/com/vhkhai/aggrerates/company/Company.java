@@ -1,6 +1,8 @@
 package com.vhkhai.aggrerates.company;
 
 import com.vhkhai.aggrerates.account.Account;
+import com.vhkhai.enumerations.JobField;
+import com.vhkhai.enumerations.JobLevel;
 import com.vhkhai.enumerations.JobPostingStatus;
 import com.vhkhai.events.JobPostingCreationEvent;
 import com.vhkhai.exception.DomainErrorCode;
@@ -46,8 +48,8 @@ public class Company extends AbstractAggregateRoot<Company> {
     private List<JobPosting> jobPostings;
 
 
-    public void addJobPosting(String title, String description) {
-        JobPosting jobPosting = new JobPosting(title, description, this);
+    public void addJobPosting(String title, String description, JobField field, JobLevel level) {
+        JobPosting jobPosting = new JobPosting(title, description, field, level, this);
         this.jobPostings.add(jobPosting);
         registerEvent(new JobPostingCreationEvent(jobPosting));
     }
@@ -56,7 +58,15 @@ public class Company extends AbstractAggregateRoot<Company> {
         return jobPostings.stream().filter(jobPosting -> jobPosting.getId().equals(id)).findFirst().orElse(null);
     }
 
-    public void updateProfile(String name, String phone, String address) {
+    public void updateJobPostingStatus(UUID jobId, JobPostingStatus status) {
+        JobPosting jobPosting = getJobPosting(jobId);
+        if(jobPosting == null) {
+            throw new DomainException(DomainErrorCode.JOB_POSTING_NOT_FOUND);
+        }
+        jobPosting.changeStatus(status);
+    }
+
+    public void updateInfo(String name, String phone, String address) {
         if(checkName(name) == false) {
             throw new DomainException(DomainErrorCode.INVALID_COMPANY_NAME);
         }

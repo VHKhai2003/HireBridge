@@ -3,7 +3,7 @@ package com.vhkhai.command.company;
 import an.awesome.pipelinr.Command;
 import com.vhkhai.aggrerates.company.Company;
 import com.vhkhai.dto.company.CompanyResponseDto;
-import com.vhkhai.dto.company.CompanyUpdateProfileRequestDto;
+import com.vhkhai.dto.company.CompanyUpdateInfoRequestDto;
 import com.vhkhai.exception.ApplicationErrorCode;
 import com.vhkhai.exception.ApplicationException;
 import com.vhkhai.mapper.CompanyMapper;
@@ -18,15 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-public record UpdateCompanyProfileCommand(
+public record UpdateCompanyInfoCommand(
         UUID companyId,
-        CompanyUpdateProfileRequestDto requestDto) implements Command<CompanyResponseDto> {
+        CompanyUpdateInfoRequestDto requestDto) implements Command<CompanyResponseDto> {
 }
 
 
 @Component
 @RequiredArgsConstructor
-class UpdateCompanyProfileCommandHandler implements Command.Handler<UpdateCompanyProfileCommand, CompanyResponseDto> {
+class UpdateCompanyInfoCommandHandler implements Command.Handler<UpdateCompanyInfoCommand, CompanyResponseDto> {
 
     private final UserAuthentication userAuthentication;
     private final CompanyRepository companyRepository;
@@ -37,7 +37,7 @@ class UpdateCompanyProfileCommandHandler implements Command.Handler<UpdateCompan
     @PreAuthorize("hasRole('COMPANY')")
     @CacheEvict(value = "company", key = "'all'")
     @CachePut(value = "company", key = "#command.companyId")
-    public CompanyResponseDto handle(UpdateCompanyProfileCommand command) {
+    public CompanyResponseDto handle(UpdateCompanyInfoCommand command) {
 
         var account = userAuthentication.getAuthenticatedUser();
 
@@ -48,7 +48,7 @@ class UpdateCompanyProfileCommandHandler implements Command.Handler<UpdateCompan
             throw new ApplicationException(ApplicationErrorCode.ACCESS_DENIED);
         }
 
-        company.updateProfile(command.requestDto().getName(),
+        company.updateInfo(command.requestDto().getName(),
                 command.requestDto().getPhone(),
                 command.requestDto().getAddress());
 

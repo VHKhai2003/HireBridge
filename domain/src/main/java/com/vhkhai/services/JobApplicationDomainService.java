@@ -7,14 +7,3 @@ import com.vhkhai.aggrerates.job_application.JobApplication;
 public interface JobApplicationDomainService {
     JobApplication applyJob(Candidate candidate, JobPosting jobPosting);
 }
-
-
-//company
-    //job
-//candidate
-    //job application
-        //interview
-
-
-//candidate.applY(job)
-//company.bookInterview(candidate)

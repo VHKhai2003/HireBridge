@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CompanyUpdateProfileRequestDto {
+public class CompanyUpdateInfoRequestDto {
     @NotBlank(message = "Name is required")
     private String name;
     @NotBlank(message = "Phone is required")

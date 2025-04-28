@@ -1,5 +1,7 @@
 package com.vhkhai.dto.job_posting;
 
+import com.vhkhai.enumerations.JobField;
+import com.vhkhai.enumerations.JobLevel;
 import com.vhkhai.enumerations.JobPostingStatus;
 import lombok.*;
 
@@ -17,4 +19,6 @@ public class JobPostingResponseDto {
     private String description;
     private JobPostingStatus status;
     private LocalDateTime createdAt;
+    private JobField field;
+    private JobLevel level;
 }

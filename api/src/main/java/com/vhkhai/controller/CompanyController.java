@@ -4,10 +4,10 @@ import an.awesome.pipelinr.Pipeline;
 import com.vhkhai.command.candidate.FollowCompanyCommand;
 import com.vhkhai.command.candidate.UnFollowCompanyCommand;
 import com.vhkhai.command.company.CreateCompanyCommand;
-import com.vhkhai.command.company.UpdateCompanyProfileCommand;
+import com.vhkhai.command.company.UpdateCompanyInfoCommand;
 import com.vhkhai.dto.account.AccountResponseDto;
 import com.vhkhai.dto.company.CompanyResponseDto;
-import com.vhkhai.dto.company.CompanyUpdateProfileRequestDto;
+import com.vhkhai.dto.company.CompanyUpdateInfoRequestDto;
 import com.vhkhai.port.auth.UserAuthentication;
 import com.vhkhai.query.company.GetCompanyQuery;
 import com.vhkhai.query.company.GetListCompaniesQuery;
@@ -61,11 +61,11 @@ public class CompanyController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<CompanyResponseDto> updateProfile(
+    public ResponseEntity<CompanyResponseDto> updateInfo(
             @PathVariable(name = "id") UUID companyId,
-            @Valid @RequestBody CompanyUpdateProfileRequestDto requestDto) {
+            @Valid @RequestBody CompanyUpdateInfoRequestDto requestDto) {
         return new RestResponse<>()
-                .withData(pipeline.send(new UpdateCompanyProfileCommand(companyId, requestDto)))
+                .withData(pipeline.send(new UpdateCompanyInfoCommand(companyId, requestDto)))
                 .withStatus(200)
                 .withMessage("Update company successfully")
                 .buildHttpResponseEntity();

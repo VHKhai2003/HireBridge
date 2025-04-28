@@ -14,6 +14,11 @@ public enum DomainErrorCode {
     INVALID_COMPANY_NAME(3001, "Invalid company name"),
     INVALID_COMPANY_PHONE(3002, "Invalid company phone"),
     INVALID_COMPANY_ADDRESS(3003, "Invalid company address"),
+    JOB_POSTING_ALREADY_CLOSED(3004, "Job posting already closed"),
+    JOB_POSTING_ALREADY_OPENED(3005, "Job posting already opened"),
+    JOB_POSTING_NOT_CLOSED(3006, "Cannot reopen job posting that is not closed"),
+    INVALID_JOB_POSTING_NEW_STATUS(3007, "Invalid job posting new status"),
+    JOB_POSTING_NOT_FOUND(3008, "Job posting not found"),
 
     INVALID_INTERVIEW_TIME(4001, "Interview time must be after at least 1 hour from now"),
     CANNOT_SCHEDULE_INTERVIEW(4002, "Cannot schedule interview"),
@@ -31,6 +36,7 @@ public enum DomainErrorCode {
     CANNOT_REJECT_WHEN_HAVING_INTERVIEW(4014, "Cannot reject when having interview"),
     CANNOT_OFFER_WHEN_HAVING_INTERVIEW(4015, "Cannot offer when having interview"),
     JOB_APPLICATION_OFFERED_OR_REJECTED(4016, "Job application has been offered or rejected"),
+    CANNOT_APPLY_WHEN_JOB_POSTING_CLOSED(4017, "Cannot apply when job posting is closed"),
     ;
 
 

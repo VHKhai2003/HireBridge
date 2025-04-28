@@ -2,8 +2,10 @@ package com.vhkhai.controller;
 
 import an.awesome.pipelinr.Pipeline;
 import com.vhkhai.command.company.AddJobPostingCommand;
+import com.vhkhai.command.company.UpdateJobPostingStatusCommand;
 import com.vhkhai.command.job_application.ApplyJobCommand;
 import com.vhkhai.dto.job_application.JobApplicationResponseDto;
+import com.vhkhai.dto.job_posting.ChangeStatusJobPostingRequestDto;
 import com.vhkhai.dto.job_posting.JobPostingRequestDto;
 import com.vhkhai.dto.job_posting.JobPostingResponseDto;
 import com.vhkhai.port.auth.UserAuthentication;
@@ -40,8 +42,10 @@ public class JobPostingController {
     public ResponseEntity<Boolean> addJobPosting(
             @PathVariable(name = "id") UUID companyId,
             @Valid @RequestBody JobPostingRequestDto requestDto) {
+        var command = new AddJobPostingCommand(companyId,
+                requestDto.getTitle(), requestDto.getDescription(), requestDto.getField(), requestDto.getLevel());
         return new RestResponse<>()
-                .withData(pipeline.send(new AddJobPostingCommand(companyId, requestDto.getTitle(), requestDto.getDescription())))
+                .withData(pipeline.send(command))
                 .withStatus(200)
                 .withMessage("Add job posting successfully")
                 .buildHttpResponseEntity();
@@ -55,6 +59,21 @@ public class JobPostingController {
                 .withData(pipeline.send(new GetJobPostingQuery(companyId, jobId)))
                 .withStatus(200)
                 .withMessage("Get job posting successfully")
+                .buildHttpResponseEntity();
+    }
+
+    @PatchMapping("/job-postings/{jobId}/status")
+    public ResponseEntity<Boolean> updateJobPostingStatus(
+            @PathVariable(name = "id") UUID companyId,
+            @PathVariable UUID jobId,
+            @RequestBody ChangeStatusJobPostingRequestDto requestDto) {
+
+        var command = new UpdateJobPostingStatusCommand(
+                companyId, jobId, requestDto.getStatus(), userAuthentication.getAuthenticatedUser());
+        return new RestResponse<>()
+                .withData(pipeline.send(command))
+                .withStatus(200)
+                .withMessage("Update job posting status successfully")
                 .buildHttpResponseEntity();
     }
 
