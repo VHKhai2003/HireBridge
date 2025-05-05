@@ -14,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(of = {"id"})
+//TODO: don't dung builder pattern for entity, it lead to break ddd
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

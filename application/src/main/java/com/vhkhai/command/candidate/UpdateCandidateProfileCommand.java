@@ -10,7 +10,6 @@ import com.vhkhai.exception.ApplicationException;
 import com.vhkhai.mapper.CandidateMapper;
 import com.vhkhai.port.auth.UserAuthentication;
 import com.vhkhai.repositories.CandidateRepository;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -18,11 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-@RequiredArgsConstructor
-@Getter
-public class UpdateCandidateProfileCommand implements Command<CandidateResponseDto> {
-    private final UUID candidateId;
-    private final CandidateUpdateProfileRequestDto requestDto;
+public record UpdateCandidateProfileCommand(UUID candidateId, CandidateUpdateProfileRequestDto requestDto)
+        implements Command<CandidateResponseDto> {
 }
 
 
@@ -40,7 +36,7 @@ class UpdateCandidateProfileCommandHandler implements Command.Handler<UpdateCand
     public CandidateResponseDto handle(UpdateCandidateProfileCommand command) {
         Account account = userAuthentication.getAuthenticatedUser();
 
-        Candidate candidate = candidateRepository.findById(command.getCandidateId())
+        Candidate candidate = candidateRepository.findById(command.candidateId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.CANDIDATE_NOT_FOUND));
 
         if (!account.equals(candidate.getAccount())) {
@@ -48,7 +44,7 @@ class UpdateCandidateProfileCommandHandler implements Command.Handler<UpdateCand
         }
 
 
-        candidate.updateProfile(command.getRequestDto().getFullName(), command.getRequestDto().getPhone());
+        candidate.updateProfile(command.requestDto().getFullName(), command.requestDto().getPhone());
 
         Candidate savedCandidate = candidateRepository.update(candidate);
         return candidateMapper.toDto(savedCandidate);

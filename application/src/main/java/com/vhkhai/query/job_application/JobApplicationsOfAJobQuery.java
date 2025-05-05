@@ -7,7 +7,6 @@ import com.vhkhai.mapper.JobApplicationMapper;
 import com.vhkhai.query.iquery.Query;
 import com.vhkhai.repositories.CompanyRepository;
 import com.vhkhai.repositories.JobApplicationRepository;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -15,12 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
-@RequiredArgsConstructor
-@Getter
-public class JobApplicationsOfAJobQuery implements Query<List<JobApplicationResponseDto>> {
-    private final UUID accountId;
-    private final UUID comapanyId;
-    private final UUID jobPostingId;
+public record JobApplicationsOfAJobQuery(UUID accountId, UUID companyId,
+                                         UUID jobPostingId) implements Query<List<JobApplicationResponseDto>> {
 }
 
 @Service
@@ -34,12 +29,12 @@ class JobApplicationsOfAJobQueryHandler implements Query.Handler<JobApplications
     @PreAuthorize("hasRole('COMPANY')")
     @Override
     public List<JobApplicationResponseDto> handle(JobApplicationsOfAJobQuery query) {
-        var company = companyRepository.findByAccountId(query.getAccountId())
+        var company = companyRepository.findById(query.companyId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.COMPANY_NOT_FOUND));
-        if(!company.getId().equals(query.getComapanyId())) {
+        if(!company.getAccount().getId().equals(query.accountId())) {
             throw new ApplicationException(ApplicationErrorCode.ACCESS_DENIED);
         }
-        var jobPosting = company.getJobPosting(query.getJobPostingId());
+        var jobPosting = company.getJobPosting(query.jobPostingId());
         if(jobPosting == null) {
             throw new ApplicationException(ApplicationErrorCode.JOB_POSTING_NOT_FOUND);
         }

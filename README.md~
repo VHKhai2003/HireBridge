@@ -1,0 +1,271 @@
+# Recruitment System
+
+## 📌 Introduction
+
+This recruitment system supports both **candidates** and **companies** throughout the hiring process:
+
+- Companies can post and manage job postings list.
+- Candidates can search for jobs, follow companies, and receive recruitment notifications.
+- The system stores application records, assists in scheduling interviews, and tracks the recruitment process.
+
+
+---
+
+## ✨ Features
+
+### 👩‍💼 For Candidates
+
+- Browse and search for job postings.
+- Apply for jobs with uploaded CVs.
+- Track application status and interview schedules.
+- Follow companies to receive job notifications.
+
+### 🏢 For Companies
+
+- Post and manage job postings.
+- Manage and track job applications.
+- Schedule and manage interviews with candidates.
+- View candidate profiles and CVs.
+- Offer or reject job applications.
+
+### 🔒 Account Management
+
+- Register as a candidate or company.
+- Secure login with account type recognition.
+- Password encryption and authentication via Spring Security.
+
+
+### 📩 Notifications
+
+- A **new job posting** is published by a **followed company**.
+- They receive a **job offer** or a **rejection** for an application.
+- An **interview is scheduled** for an ongoing application.
+- A **reminder** is triggered for an upcoming interview.
+
+
+---
+
+## 🏗️ System Architecture
+
+### ✅ Domain-Driven Design (DDD)
+
+- Clearly separates business domains.
+- Core components include **Entities**, **Aggregate Roots**, and **Domain Services**.
+- Complex business logic is encapsulated within each domain context.
+
+### ✅ Clean Architecture
+
+- **Domain Layer**: Contains domain models.
+- **Application Layer**: Handles use cases using **CQRS** (Command–Query Responsibility Segregation).
+- **Infrastructure Layer**: Manages database, caching, scheduling, security config, exception handling, etc.
+- **Interface Layer**: Provides REST APIs for external communication.
+
+### ✅ Multi-module Gradle Project
+
+- Each layer is structured as a separate, independent Gradle module for better maintainability and scalability.
+- Each module is self-contained and can be built and deployed independently.
+- Gradle handles the dependencies between modules, ensuring consistent versions and configurations.
+- Modules can be easily added or removed as needed.
+
+---
+
+## 📦 Domain Model
+
+### `Account`
+
+- Represents a system login account.
+- Attributes: `email`, `password`, `type` (`CANDIDATE`, `COMPANY`).
+
+### `Company`
+
+- Represents a recruiting company.
+- Attributes: `name`, `phone`, `address`, etc.
+- Relationships: Owns multiple `JobPostings`.
+- Behaviors:
+    - `addJobPosting()`
+    - `updateJobPosting()`
+    - `updateInfo()`
+
+### `Candidate`
+
+- Represents a job seeker.
+- Attributes: `name`, `email`, `cv`, etc.
+- Relationships:
+    - Follows multiple `Companies`.
+    - Receives multiple `Notifications`.
+- Behaviors:
+    - `updateCV()`
+    - `follow()` / `unfollow()`
+    - `receiveNotification()`
+
+### `JobApplication`
+
+- Represents a candidate's application to a `JobPosting`.
+- Relationships: Contains multiple `Interviews`.
+- Behaviors: 
+  - `applyJob()`, `addInterview()`, `updateInterview()`, `cancelInterview()`,etc.
+  - `reject()`, `offer()`,
+
+
+
+!![Database Schema](https://res.cloudinary.com/dac1o9kr4/image/upload/v1746442102/Picture1_agvf41.png)
+
+---
+
+## 🗂️ Project Modules Structure
+
+```
+recruitment/
+├── domain/
+├── application/
+├── infra/
+├── api/
+├── build.gradle.kts
+└── settings.gradle.kts
+```
+
+### Domain Layer
+```
+domain/
+└── src/main/java/com/vhkhai/
+                       ├── aggrerates/
+                       │   ├── account/
+                       │   │   └── Account.java
+                       │   ├── candidate/
+                       │   │   ├── Candidate.java
+                       │   │   ├── Following.java
+                       │   │   ├── FollowingId.java
+                       │   │   └── Notification.java
+                       │   ├── company/
+                       │   │   ├── Company.java
+                       │   │   └── JobPosting.java
+                       │   └── job_application/
+                       │       ├── Interview.java
+                       │       └── JobApplication.java
+                       ├── enumerations/
+                       │   ├── AccountType.java
+                       │   ├── ApplicationStatus.java
+                       │   ├── InterviewStatus.java
+                       │   ├── JobField.java
+                       │   ├── JobLevel.java
+                       │   └── JobPostingStatus.java
+                       ├── exception/
+                       │   ├── DomainErrorCode.java
+                       │   └── DomainException.java
+                       ├── repositories/
+                       │   ├── JobApplicationRepository.java
+                       │   ├── CandidateRepository.java
+                       │   ├── CompanyRepository.java
+                       │   └── AccountRepository.java
+                       ├── services/
+                       │   ├── JobApplicationDomainService.java
+                       │   └── impl/
+                       │       └── JobApplicationDomainServiceImpl.java
+                       └── shared/
+                           └── BaseRepository.java
+```
+
+
+### Application Layer
+```
+application/
+└── src/main/java/com/vhkhai/
+                       ├── command/
+                       │   ├── candidate/
+                       │   ├── company/
+                       │   └── job_application/
+                       ├── config/
+                       │   └── PinelinrConfiguration.java
+                       ├── dto/
+                       ├── mapper/
+                       ├── events/
+                       │   ├── InterviewCreationEventListener.java
+                       │   ├── InterviewReScheduleEventListener.java
+                       │   ├── JobOfferEventListener.java
+                       │   ├── JobPostingCreationEventListener.java
+                       │   └── JobRejectEventListener.java
+                       ├── exception/
+                       │   ├── ApplicationErrorCode.java
+                       │   └── ApplicationException.java
+                       ├── port/
+                       │   ├── auth/
+                       │   │   ├── Jwt.java
+                       │   │   ├── PwEncoder.java
+                       │   │   └── UserAuthentication.java
+                       │   ├── cache/
+                       │   │   ├── CachingConstant.java
+                       │   │   └── CachingService.java
+                       │   ├── file/
+                       │   │   └── Uploader.java
+                       │   └── scheduler/
+                       │       ├── ScheduledTask.java
+                       │       └── Scheduler.java
+                       ├── query/
+                       │   ├── candidate/
+                       │   ├── company/
+                       │   └── job_application/
+                       └── service/
+                           ├── AuthService.java
+                           ├── MediaService.java
+                           └── impl/
+                               ├── AuthServiceImpl.java
+                               └── MediaServiceImpl.java
+```
+
+
+### Infrastructure Layer
+```
+infra/
+└── src/main/java/com/vhkhai/
+                       ├── caching/
+                       │   ├── RedisCachingService.java
+                       │   └── RedisConfig.java
+                       ├── cloudinary/
+                       │   ├── CloudinaryConfig.java
+                       │   └── CloudinaryService.java
+                       ├── exception/
+                       │   ├── ErrorCode.java
+                       │   ├── InfrastructureException.java
+                       │   ├── handler/
+                       │   │   └── GlobalExceptionHandler.java
+                       │   └── response/
+                       │       └── ErrorResponse.java
+                       ├── repositories/
+                       │   ├── impl/
+                       │   │   ├── AccountRepositoryImpl.java
+                       │   │   ├── CandidateRepositoryImpl.java
+                       │   │   ├── CompanyRepositoryImpl.java
+                       │   │   └── JobApplicationRepositoryImpl.java
+                       │   └── jpa/
+                       │       ├── AccountRepositoryJpa.java
+                       │       ├── CandidateRepositoryJpa.java
+                       │       ├── CompanyRepositoryJpa.java
+                       │       └── JobApplicationRepositoryJpa.java
+                       ├── scheduler/
+                       │   ├── SchedulerConfig.java
+                       │   └── SchedulerService.java
+                       └── security/
+                           ├── encoder/
+                           │   ├── PasswordEncoderConfig.java
+                           │   └── PasswordEncoderProvider.java
+                           ├── exception/
+                           │   ├── CustomAccessDeniedHandler.java
+                           │   └── CustomAuthenticationEntryPoint.java
+                           ├── jwt/
+                           │   └── JwtUtils.java
+                           ├── JwtFilter.java
+                           ├── SecurityConfig.java
+                           └── UserAuthenticationProvider.java
+```
+
+---
+
+## 🚀 How to Run
+1. Clone the repository.
+2. Navigate to the project directory.
+3. Update `application.yml` with your database configuration and other settings.
+3. Build the project using Gradle:
+```bash
+./gradlew build
+./gradlew bootRun
+

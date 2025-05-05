@@ -20,6 +20,5 @@ public class JobApplicationResponseDto {
     private JobPostingResponseDto jobPosting;
     private ApplicationStatus status;
     private LocalDateTime createdAt;
-    private String rejectReason;
     private List<InterviewResponseDto> interviews;
 }

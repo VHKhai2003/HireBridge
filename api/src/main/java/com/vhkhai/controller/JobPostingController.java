@@ -118,7 +118,7 @@ public class JobPostingController {
         return new RestResponse<>()
                 .withData(pipeline.send(new JobApplicationsOfAJobQuery(accountId, companyId, jobId)))
                 .withStatus(200)
-                .withMessage("Apply for job successfully")
+                .withMessage("Get job applications of a job successfully")
                 .buildHttpResponseEntity();
     }
 

@@ -3,6 +3,7 @@ package com.vhkhai.controller;
 import com.vhkhai.dto.account.AccountRequestDto;
 import com.vhkhai.dto.token.RefreshTokenRequestDto;
 import com.vhkhai.dto.token.TokenRequestDto;
+import com.vhkhai.dto.token.TokenResponseDto;
 import com.vhkhai.service.AuthService;
 import com.vhkhai.utils.RestResponse;
 import jakarta.validation.Valid;
@@ -20,7 +21,7 @@ public class AuthController {
      private final AuthService authService;
 
      @PostMapping("/login")
-     public ResponseEntity login(@RequestBody AccountRequestDto accountRequestDto) {
+     public ResponseEntity<TokenResponseDto> login(@RequestBody AccountRequestDto accountRequestDto) {
           return new RestResponse<>()
                   .withData(authService.login(accountRequestDto))
                   .withStatus(200)
@@ -38,7 +39,7 @@ public class AuthController {
      }
 
      @PostMapping("/refresh-token")
-        public ResponseEntity refreshToken(@Valid @RequestBody RefreshTokenRequestDto requestDto) {
+        public ResponseEntity<TokenResponseDto> refreshToken(@Valid @RequestBody RefreshTokenRequestDto requestDto) {
             return new RestResponse<>()
                     .withData(authService.refreshToken(requestDto))
                     .withStatus(200)

@@ -7,7 +7,7 @@ import lombok.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "candidate_followings")
+@Table(name = "followings")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

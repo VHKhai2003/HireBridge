@@ -27,6 +27,13 @@ spring:
         port: ${REDIS_PORT:6379}
     cache:
         type: redis
+        redis:
+            time-to-live: 3600s
+
+jwt:
+    secret_key: ${JWT_SECRET_KEY:your-secret-keykakjeoodjjdjjdnviqquhdl84220002jrjjoidoso938aunvnaoidj}
+    access-expiration: ${JWT_ACCESS_EXPIRATION:3600000}
+    refresh-expiration: ${JWT_REFRESH_EXPIRATION:2592000000}
 
 cloudinary:
     cloud-name: ${CLOUDINARY_CLOUD_NAME}

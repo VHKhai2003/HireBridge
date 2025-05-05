@@ -1,13 +1,8 @@
 package com.vhkhai.mapper;
 
 import com.vhkhai.aggrerates.candidate.Candidate;
-import com.vhkhai.aggrerates.candidate.Following;
 import com.vhkhai.dto.candidate.CandidateResponseDto;
-import com.vhkhai.dto.company.CompanyResponseDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CandidateMapper {

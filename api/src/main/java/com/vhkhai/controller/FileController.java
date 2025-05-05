@@ -21,5 +21,4 @@ public class FileController {
                 .withMessage("Get signed url successfully")
                 .buildHttpResponseEntity();
     }
-    // TODO all image, file .etc
 }

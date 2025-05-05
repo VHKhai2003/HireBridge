@@ -21,6 +21,7 @@ public interface CompanyRepositoryJpa extends JpaRepository<Company, UUID> {
         FROM JobPosting jp 
         WHERE (:field IS NULL OR jp.field = :field) 
           AND (:level IS NULL OR jp.level = :level)
+          AND jp.status != 'CLOSED'
     """)
     Page<JobPosting> findJobPostingsByFieldAndLevel(
             @Param("field") JobField field,

@@ -5,7 +5,6 @@ import com.vhkhai.exception.ApplicationErrorCode;
 import com.vhkhai.exception.ApplicationException;
 import com.vhkhai.repositories.CandidateRepository;
 import com.vhkhai.repositories.CompanyRepository;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;

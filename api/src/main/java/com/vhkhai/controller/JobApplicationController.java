@@ -2,8 +2,10 @@ package com.vhkhai.controller;
 
 import an.awesome.pipelinr.Pipeline;
 import com.vhkhai.command.job_application.*;
+import com.vhkhai.dto.candidate.CandidateResponseDto;
 import com.vhkhai.dto.job_application.*;
 import com.vhkhai.port.auth.UserAuthentication;
+import com.vhkhai.query.job_application.GetCandidateOfJobApplicationQuery;
 import com.vhkhai.query.job_application.GetInterviewQuery;
 import com.vhkhai.query.job_application.GetJobApplicationQuery;
 import com.vhkhai.utils.RestResponse;
@@ -101,6 +103,15 @@ public class JobApplicationController {
         return new RestResponse<>()
                 .withStatus(200)
                 .withMessage("Reject job application successfully")
+                .buildHttpResponseEntity();
+    }
+
+    @GetMapping("/candidate")
+    public ResponseEntity<CandidateResponseDto> getCandidate(@PathVariable UUID id) {
+        return new RestResponse<>()
+                .withData(pipeline.send(new GetCandidateOfJobApplicationQuery(userAuthentication.getAuthenticatedUser(), id)))
+                .withStatus(200)
+                .withMessage("Get candidate successfully")
                 .buildHttpResponseEntity();
     }
 

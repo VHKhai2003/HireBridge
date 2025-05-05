@@ -19,7 +19,6 @@ import com.vhkhai.query.job_application.JobApplicationsOfCandidateQuery;
 import com.vhkhai.service.AuthService;
 import com.vhkhai.utils.RestResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,11 +58,10 @@ public class CandidateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CandidateResponseDto> getCandidate(
-            @NotNull(message = "Candidate id is required") @PathVariable UUID id) {
+    public ResponseEntity<CandidateResponseDto> getCandidate(@PathVariable UUID id) {
 
         return new RestResponse<>()
-                .withData(pipeline.send(new GetCandidateQuery(id)))
+                .withData(pipeline.send(new GetCandidateQuery(id, userAuthentication.getAuthenticatedUser())))
                 .withStatus(200)
                 .withMessage("Get candidate successfully")
                 .buildHttpResponseEntity();
@@ -71,9 +69,8 @@ public class CandidateController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<CandidateResponseDto> updateCandidate(
-            @NotNull(message = "Candidate id is required") @PathVariable UUID id,
+            @PathVariable UUID id,
             @Valid @RequestBody CandidateUpdateProfileRequestDto requestDto) {
-
         return new RestResponse<>()
                 .withData(pipeline.send(new UpdateCandidateProfileCommand(id, requestDto)))
                 .withStatus(200)
@@ -83,7 +80,7 @@ public class CandidateController {
 
     @PostMapping("/{id}/upload-cv")
     public ResponseEntity<String> uploadCV(
-            @NotNull(message = "Candidate id is required") @PathVariable UUID id,
+            @PathVariable UUID id,
             @RequestParam("file") MultipartFile file) {
 
         return new RestResponse<>()

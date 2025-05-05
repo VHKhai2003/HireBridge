@@ -12,6 +12,8 @@ import com.vhkhai.exception.DomainErrorCode;
 import com.vhkhai.exception.DomainException;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
 import java.time.LocalDateTime;
@@ -25,6 +27,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @EqualsAndHashCode(of = {"id"})
+@DynamicInsert
 public class JobApplication extends AbstractAggregateRoot<JobApplication> {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -35,6 +38,10 @@ public class JobApplication extends AbstractAggregateRoot<JobApplication> {
 
     @Column(name = "reject_reason")
     private String rejectReason;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "candidate_id")

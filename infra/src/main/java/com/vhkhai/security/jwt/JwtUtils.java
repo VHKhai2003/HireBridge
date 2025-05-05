@@ -5,18 +5,22 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.Map;
 import java.util.UUID;
 
 @Component
 public class JwtUtils implements Jwt {
-    private final String jwtSecret = "your-secret-keykakjeoodjjdjjdnviqquhdl84220002jrjjoidoso938aunvnaoidj";
-    private final long jwtAccessExpirationMs = 60 * 60 * 1000;
-    private final long jwtRefreshExpirationMs = 30L * 24 * 60 * 60 * 1000;
+
+    @Value("${jwt.secret_key}")
+    private String jwtSecret;
+    @Value("${jwt.access-expiration}")
+    private long jwtAccessExpirationMs;
+    @Value("${jwt.refresh-expiration}")
+    private long jwtRefreshExpirationMs;
 
 //    public String generateToken(Account account, String type) {
 //        Map<String, Object> claims = new HashMap<>();
