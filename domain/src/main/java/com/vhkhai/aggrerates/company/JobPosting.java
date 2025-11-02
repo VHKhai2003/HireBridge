@@ -8,6 +8,11 @@ import com.vhkhai.exception.DomainException;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -18,6 +23,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 public class JobPosting {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -34,8 +40,12 @@ public class JobPosting {
     private JobLevel level;
 
     @Column(name = "created_at")
-    @CreationTimestamp
+    @CreatedDate
     private LocalDateTime createdAt;
+
+    @Column(name = "modified_at")
+    @LastModifiedDate
+    private LocalDateTime modifiedAt;
 
     @Enumerated(EnumType.STRING)
     private JobPostingStatus status;
@@ -43,6 +53,15 @@ public class JobPosting {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @CreatedBy
+    @Column(name = "created_user_id")
+    private UUID createdUserId;
+
+    @LastModifiedBy
+    @Column(name = "modified_user_id")
+    private UUID modifiedUserId;
+
 
     public JobPosting(String title, String description, JobField field, JobLevel level, Company company) {
         this.title = title;

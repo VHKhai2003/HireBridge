@@ -56,7 +56,7 @@ This recruitment system supports both **candidates** and **companies** throughou
 ### ✅ Clean Architecture
 
 - **Domain Layer**: Contains domain models.
-- **Application Layer**: Handles use cases using **CQRS** (Command–Query Responsibility Segregation).
+- **Application Layer**: Handles use cases using **CQRS** (Command–Query Responsibility Segregation) and **Mediator** pattern.
 - **Infrastructure Layer**: Manages database, caching, scheduling, security config, exception handling, etc.
 - **Interface Layer**: Provides REST APIs for external communication.
 
@@ -108,7 +108,7 @@ This recruitment system supports both **candidates** and **companies** throughou
 
 
 
-!![Database Schema](https://res.cloudinary.com/dac1o9kr4/image/upload/v1746442102/Picture1_agvf41.png)
+!![Database Schema](https://res.cloudinary.com/dac1o9kr4/image/upload/v1746583364/recruitment_ibe7bz.png)
 
 !![Class Diagram](https://res.cloudinary.com/dac1o9kr4/image/upload/v1746442103/recruitment_ge2zyu.png)
 
